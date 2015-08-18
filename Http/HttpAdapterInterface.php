@@ -2,6 +2,8 @@
 
 namespace Happyr\LocoBundle\Http;
 
+use Happyr\LocoBundle\Exception\HttpException;
+
 /**
  * @author Tobias Nyholm
  */

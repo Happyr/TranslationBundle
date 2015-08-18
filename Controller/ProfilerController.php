@@ -37,13 +37,11 @@ class ProfilerController extends Controller
         $all = $profile->getCollector('translation');
         $toSave = array_intersect_key($all->getMessages(), array_flip($selected));
 
-        $loco = $this->get('happyr.loco.service');
-        foreach ($toSave as $message) {
-            $loco->createNewMessage($message);
-        }
+        $loco = $this->get('happyr.loco');
+        $saved = $loco->createMessages($toSave);
 
-        if (true) {
-            return new Response(sprintf('%s translation keys saved!', count($selected)));
+        if ($saved > 0) {
+            return new Response(sprintf('%s translation keys saved!', $saved));
         } else {
             return new Response("Can't save the translations.");
         }

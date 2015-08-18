@@ -2,9 +2,11 @@
 
 namespace Happyr\LocoBundle\Http;
 
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
+use Happyr\LocoBundle\Exception\HttpException;
 
 /**
  * @author Tobias Nyholm
@@ -12,7 +14,7 @@ use GuzzleHttp\Psr7\Request;
 class Guzzle6Adapter implements HttpAdapterInterface
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function send($method, $url, $data)
     {
