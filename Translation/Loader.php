@@ -1,6 +1,6 @@
 <?php
 
-namespace Happyr\LocoBundle\LocoBundle\Translation;
+namespace Happyr\LocoBundle\Translation;
 
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\LoaderInterface;
@@ -24,12 +24,6 @@ class Loader extends ArrayLoader implements LoaderInterface
         }
 
         $messages = require($resource);
-
-        $messages = array_filter($messages);
-        array_walk($messages, function(&$param) {
-            $param = stripslashes(str_replace(array("\\|", "\\\\|"), "|", $param));
-        });
-
         $catalogue = parent::load($messages, $locale, $domain);
         $catalogue->addResource(new FileResource($resource));
 

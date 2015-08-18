@@ -2,6 +2,29 @@ parameters:
 
 services:
   happyr.loco.translation.loader:
-    class: Happyr\LocoBundle\Tranlation\LocoLoader
+    class: Happyr\LocoBundle\Translation\Loader
     tags:
-      - { name: 'translation.loader', alias: 'loco' }
+      - { name: 'translation.loader', alias: 'phps' }
+
+  # Custom data_collector to use our own template
+  happyr.loco.data_collector.translation:
+    class: Symfony\Component\Translation\DataCollector\TranslationDataCollector
+    arguments: [ @translator.data_collector ]
+    tags:
+      - { name: 'data_collector', template: "@HappyrLoco/Profiler/translation", id: "translation", priority: 200 }
+
+  happyr.loco.downloader:
+    class: Happyr\LocoBundle\Service\Downloader
+    arguments:
+      - @happyr.loco.http_adapter
+      - ~
+      - ~
+
+  happyr.loco.service:
+    class: Happyr\LocoBundle\Service\Loco
+    arguments:
+      - @happyr.loco.http_adapter
+
+  happyr.loco.http_adapter.guzzle5:
+    class: Happyr\LocoBundle\Http\Guzzle5Adapter
+    public: false

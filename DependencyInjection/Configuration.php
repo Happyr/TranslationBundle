@@ -19,10 +19,16 @@ class Configuration implements ConfigurationInterface
         $root = $treeBuilder->root('happyr_loco');
 
         $root->children()
-            ->scalarNode("target_dir")->defaultValue("%kernel.root_dir%/Resources/translations")->end()
-            ->booleanNode("use_domain_as_tag")->defaultFalse->end()
-            ->arrayNode('locales')->end()
-            ->arrayNode('domains')->end()
+            ->scalarNode('target_dir')->defaultValue('%kernel.root_dir%/Resources/translations')->end()
+            ->arrayNode('locales')
+                ->requiresAtLeastOneElement()
+                ->prototype("scalar")->end()
+            ->end()
+            ->arrayNode('domains')
+                ->requiresAtLeastOneElement()
+                ->prototype("scalar")->end()
+            ->end()
+            ->scalarNode('http_adapter')->defaultValue('guzzle5')->end()
             ->append($this->getProjectNode())
         ->end();
 
@@ -42,8 +48,14 @@ class Configuration implements ConfigurationInterface
             ->prototype('array')
             ->children()
                 ->scalarNode('api_key')->isRequired()->end()
-                ->arrayNode('locales')->end()
-                ->arrayNode('domains')->end()
+                ->arrayNode('locales')
+                    ->requiresAtLeastOneElement()
+                    ->prototype("scalar")->end()
+                ->end()
+                ->arrayNode('domains')
+                    ->requiresAtLeastOneElement()
+                    ->prototype("scalar")->end()
+                ->end()
             ->end()
         ->end();
 
