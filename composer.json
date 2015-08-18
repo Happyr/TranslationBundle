@@ -1,0 +1,25 @@
+{
+    "name": "happyr/loco-bundle",
+    "type": "symfony-bundle",
+    "description": "Integrate with http://localise.biz",
+    "keywords": [],
+    "homepage": "http://developer.happyr.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tobias Nyholm",
+            "email": "tobias@happyr.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "guzzlehttp/guzzle": "~5.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "Happyr\\LocoBundle\\": ""
+        }
+    },
+    "target-dir": "Happyr/LocoBundle"
+}
+

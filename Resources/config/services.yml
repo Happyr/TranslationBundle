@@ -1,0 +1,7 @@
+parameters:
+
+services:
+  happyr.loco.translation.loader:
+    class: Happyr\LocoBundle\Tranlation\LocoLoader
+    tags:
+      - { name: 'translation.loader', alias: 'loco' }
