@@ -2,8 +2,11 @@
 
 namespace Happyr\LocoBundle\Http;
 
+use Guzzle\Common\Exception\ExceptionCollection;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Pool;
+use Happyr\LocoBundle\Exception\HttpException;
 
 /**
  * @author Tobias Nyholm
@@ -11,16 +14,21 @@ use GuzzleHttp\Pool;
 class Guzzle5Adapter implements HttpAdapterInterface
 {
     /**
-     * @param $method
-     * @param $url
-     * @param $data
+     * @inheritdoc
      */
     public function send($method, $url, $data)
     {
-        $client = new Client(['base_url' => HttpAdapterInterface::BASE_URL]);
-        $response = $client->send($client->createRequest($method, $url, $data));
+        $client = new Client([
+            'base_url' => HttpAdapterInterface::BASE_URL
+        ]);
 
-        return (string) $response->getBody();
+        try {
+            $response = $client->send($client->createRequest($method, $url, $data));
+        } catch (ClientException $e) {
+            throw new HttpException('Could not transfer data to Loco', $e->getCode(), $e);
+        }
+
+        return $response->json();
     }
 
     /**

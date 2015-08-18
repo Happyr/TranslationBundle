@@ -11,8 +11,18 @@ Install the bundle with `composer require happyr/loco-bundle`
 happyr_loco:
   locales: ['en','sv','fr','es']
   projects:
-    navigation:
+    messages:
       api_key: 'foobar' 
+    navigation:
+      api_key: 'bazbar' 
+
+# or..
+happyr_loco:
+  locales: ['en','sv','fr','es']
+  dimensions: ['messages', 'navigation']
+  projects:
+    acme:
+      api_key: 'foobar'  
     
 ```
 
@@ -23,3 +33,8 @@ _happyr_loco:
     resource: '@HappyrLocoBundle/Resources/config/routing_dev.yml'
     
 ```
+
+# Credits
+
+This bundle is both inspired by and is using some of the code from [Jokicode.com](http://jolicode.com/blog/translation-workflow-with-symfony2)
+and from Cliff Odijk's (@cmodijk) [LocoBundle](https://github.com/JCID/JcidLocoBundle).

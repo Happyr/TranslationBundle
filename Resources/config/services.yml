@@ -24,6 +24,7 @@ services:
     class: Happyr\LocoBundle\Service\Loco
     arguments:
       - @happyr.loco.http_adapter
+      - ~
 
   happyr.loco.http_adapter.guzzle5:
     class: Happyr\LocoBundle\Http\Guzzle5Adapter

@@ -33,6 +33,9 @@ class HappyrLocoExtension extends Extension
         }
         $container->setAlias('happyr.loco.http_adapter', $adapter);
 
+        $container->findDefinition('happyr.loco.service')
+            ->replaceArgument(1, $config['projects']);
+
         $container->findDefinition('happyr.loco.downloader')
             ->replaceArgument(1, $config['projects'])
             ->replaceArgument(2, $config['target_dir']);
