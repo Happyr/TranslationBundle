@@ -17,7 +17,10 @@ class Guzzle5Adapter implements HttpAdapterInterface
      */
     public function send($method, $url, $data)
     {
-        // TODO: Implement send() method.
+        $client = new Client(['base_url' => HttpAdapterInterface::BASE_URL]);
+        $response = $client->send($client->createRequest($method, $url, $data));
+
+        return (string) $response->getBody();
     }
 
     /**
@@ -30,7 +33,7 @@ class Guzzle5Adapter implements HttpAdapterInterface
         $requests = array();
         foreach ($data as $url => $path) {
             $requests[] = $client->createRequest('GET', HttpAdapterInterface::BASE_URL.$url, [
-                'save_to'=>$path,
+                'save_to' => $path,
             ]);
         }
 
@@ -46,6 +49,6 @@ class Guzzle5Adapter implements HttpAdapterInterface
 
     public function uploadFiles(array $data)
     {
-
+        user_error('Not implemented', E_USER_ERROR);
     }
 }

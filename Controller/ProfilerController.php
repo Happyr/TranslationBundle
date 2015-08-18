@@ -28,23 +28,22 @@ class ProfilerController extends Controller
         $profiler = $this->get('profiler');
         $profiler->disable();
 
-        $selected   = $request->request->get('selected');
+        $selected = $request->request->get('selected');
         if (!$selected || count($selected) == 0) {
             return new Response('No key selected.');
         }
 
-        $profile    = $profiler->loadProfile($token);
-        $all        = $profile->getCollector('translation');
-        $toSave     = array_intersect_key($all->getMessages(), array_flip($selected));
+        $profile = $profiler->loadProfile($token);
+        $all = $profile->getCollector('translation');
+        $toSave = array_intersect_key($all->getMessages(), array_flip($selected));
 
         $loco = $this->get('happyr.loco.service');
         foreach ($toSave as $message) {
             $loco->createNewMessage($message);
         }
 
-
         if (true) {
-            return new Response(sprintf("%s translation keys saved!", count($selected)));
+            return new Response(sprintf('%s translation keys saved!', count($selected)));
         } else {
             return new Response("Can't save the translations.");
         }

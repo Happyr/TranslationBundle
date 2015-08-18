@@ -2,14 +2,10 @@
 
 namespace Happyr\LocoBundle\Service;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Message\Response;
-use GuzzleHttp\Pool;
 use Happyr\LocoBundle\Http\HttpAdapterInterface;
 
 /**
  * @author Cliff Odijk (cmodijk)
- *
  * @author Tobias Nyholm
  */
 class Downloader
@@ -27,8 +23,8 @@ class Downloader
      * Downloader constructor.
      *
      * @param HttpAdapterInterface $httpAdapter
-     * @param array                     $projects
-     * @param string                     $targetDir
+     * @param array                $projects
+     * @param string               $targetDir
      */
     public function __construct(HttpAdapterInterface $httpAdapter, $projects, $targetDir)
     {
@@ -38,7 +34,7 @@ class Downloader
     }
 
     /**
-     * Download all the translations from Loco
+     * Download all the translations from Loco.
      */
     public function download()
     {
@@ -60,12 +56,13 @@ class Downloader
     }
 
     /**
-     * @param array $data
-     * @param array $config
-     * @param string      $domain
-     * @param boolean      $useDomainAsFilter
+     * @param array  $data
+     * @param array  $config
+     * @param string $domain
+     * @param bool   $useDomainAsFilter
      */
-    public function getUrls(array &$data, array &$config, $domain, $useDomainAsFilter) {
+    public function getUrls(array &$data, array &$config, $domain, $useDomainAsFilter)
+    {
         $query = array(
             'key' => $config['api_key'],
             'format' => 'symfony',

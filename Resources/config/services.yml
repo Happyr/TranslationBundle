@@ -28,3 +28,7 @@ services:
   happyr.loco.http_adapter.guzzle5:
     class: Happyr\LocoBundle\Http\Guzzle5Adapter
     public: false
+
+  happyr.loco.http_adapter.guzzle6:
+    class: Happyr\LocoBundle\Http\Guzzle6Adapter
+    public: false

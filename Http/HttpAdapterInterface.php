@@ -15,7 +15,6 @@ interface HttpAdapterInterface
      * @param $method
      * @param $url
      * @param $data
-     *
      */
     public function send($method, $url, $data);
 }

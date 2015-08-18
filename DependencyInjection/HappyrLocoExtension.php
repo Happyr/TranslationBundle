@@ -39,14 +39,14 @@ class HappyrLocoExtension extends Extension
     }
 
     /**
-     * Copy the parent configuration to the children
+     * Copy the parent configuration to the children.
      *
      * @param string $key
-     * @param array $config
+     * @param array  $config
      */
     private function copyValuesFromParentToProject($key, array &$config)
     {
-        if (empty($config[$key])){
+        if (empty($config[$key])) {
             return;
         }
 
