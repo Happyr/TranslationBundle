@@ -4,7 +4,8 @@ This bundle helps you to integrate with the Loco translation service. The key fe
 
 * Easy to download all translations from https://localise.biz
 * Support for multiple projects
-* Create new translation assets by the WebProfiler toolbar
+* Create new translation assets by the Symfony WebProfiler
+* Edit, flag and synchronize the translation via the Symfony WebProfiler 
 
 ## Usage
 
@@ -57,6 +58,15 @@ _happyr_loco:
     resource: '@HappyrLocoBundle/Resources/config/routing_dev.yml'
     
 ```
+
+# TODO
+
+* The new page in the WebProfiler needs some design and nice icons.
+* The error handling is not always the best. 
+  * The Loco class
+  * In the HttpAdapters
+  * In the javascript
+  
 
 # Credits
 

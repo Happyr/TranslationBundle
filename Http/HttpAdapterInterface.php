@@ -11,8 +11,12 @@ interface HttpAdapterInterface
 {
     const BASE_URL = 'https://localise.biz/api/';
 
+    /**
+     * @param array $data
+     *
+     * @return mixed
+     */
     public function downloadFiles(array $data);
-    public function uploadFiles(array $data);
 
     /**
      * @param string $method

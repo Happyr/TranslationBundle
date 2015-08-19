@@ -59,9 +59,4 @@ class Guzzle6Adapter implements HttpAdapterInterface
         // Force the pool of requests to complete.
         $promise->wait();
     }
-
-    public function uploadFiles(array $data)
-    {
-        user_error('Not implemented', E_USER_ERROR);
-    }
 }
