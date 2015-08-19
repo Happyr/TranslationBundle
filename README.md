@@ -24,7 +24,7 @@ When you want to fetch new translations from Loco you should run the synchronize
 keep your current placeholders from missing translations. 
 
 ``` bash
-php app/console translation:loco:download
+php app/console translation:loco:sync
 ```
 
 ## Install
