@@ -89,10 +89,11 @@ class Loco
         }
 
         $logoTranslation = $response['translation'];
+        $messageTranslation = $message->getTranslation();
+        $message->setTranslation($logoTranslation);
 
         // update filesystem
-        if ($updateFs && $logoTranslation !== $message->getTranslation()) {
-            $message->setTranslation($logoTranslation);
+        if ($updateFs && $logoTranslation !== $messageTranslation) {
             $this->filesystemService->updateMessageCatalog([$message]);
         }
 
@@ -110,7 +111,7 @@ class Loco
 
         try {
             $response = $this->httpAdapter->send(
-                'GET',
+                'POST',
                 sprintf('translations/%s/%s', $message->getId(), $message->getLocale()),
                 [
                     'query' => ['key' => $project['api_key']],

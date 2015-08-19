@@ -1,8 +1,8 @@
 {% extends '@WebProfiler/Collector/translation.html.twig' %}
 
 {#
-# Author Damien Alexandre (damienalexandre)
-#}
+ # Authors Tobias Nyholm, Damien Alexandre (damienalexandre)
+ #}
 
 {% import _self as translator %}
 {% block panelContent %}
@@ -56,6 +56,7 @@
                 <td><code class="translation">{{ message.translation }}</code></td>
                 <td><a href="javascript:void(0);" onclick='flagMessage("{{ key }}")'>Flag</a>
                     <a href="javascript:void(0);" onclick='syncMessage("{{ key }}")'>Sync</a>
+                    <a href="javascript:void(0);" onclick='getEditForm("{{ key }}")'>Edit</a>
                 </td>
             </tr>
         {% endfor %}
@@ -76,17 +77,14 @@
 
     <script type="text/javascript">
         function flagMessage(key) {
-            console.log("Flagging message "+key);
-
             Sfjs.request(
                     "{{ path('_profiler_translations_flag', {'token': token}) }}",
                     function(xhr) {
                         // Success
-                        console.log(" - Success");
                     },
                     function(xhr) {
                         // Error
-                        console.log(" - Error");
+                        console.log("Flagging message "+key+" - Error");
                     },
                     serializeQueryString({message_id: key}),
                     { method: 'POST' }
@@ -94,10 +92,26 @@
         }
 
         function syncMessage(key) {
-            console.log("Syncing message "+key);
-
             Sfjs.request(
                     "{{ path('_profiler_translations_sync', {'token': token}) }}",
+                    function(xhr) {
+                        // Success
+                        var el = document.getElementById(key).getElementsByClassName("translation");
+                        el[0].innerHTML = xhr.responseText;
+                    },
+                    function(xhr) {
+                        // Error
+                        console.log("Syncing message "+key + " - Error");
+                    },
+                    serializeQueryString({message_id: key}),
+                    { method: 'POST' }
+            );
+        }
+
+        function getEditForm(key) {
+
+            Sfjs.request(
+                    "{{ path('_profiler_translations_edit', {'token': token}) }}?" + serializeQueryString({message_id: key}),
                     function(xhr) {
                         // Success
                         console.log(" - Success");
@@ -106,11 +120,34 @@
                     },
                     function(xhr) {
                         // Error
-                        console.log(" - Error");
+                        console.log("Getting edit form "+key+" - Error");
                     },
-                    serializeQueryString({message_id: key}),
+                    { method: 'GET' }
+            );
+        }
+
+        function saveEditForm(key, translation) {
+
+            Sfjs.request(
+                    "{{ path('_profiler_translations_edit', {'token': token}) }}",
+                    function(xhr) {
+                        // Success
+                        var el = document.getElementById(key).getElementsByClassName("translation");
+                        el[0].innerHTML = xhr.responseText;
+                    },
+                    function(xhr) {
+                        // Error
+                        console.log("Saving edit form "+key +" - Error");
+                    },
+                    serializeQueryString({message_id: key, translation:translation}),
                     { method: 'POST' }
             );
+
+            return false;
+        }
+
+        function cancelEditForm(key) {
+            syncMessage(key);
         }
 
         var serializeQueryString = function(obj, prefix) {

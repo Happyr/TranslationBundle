@@ -11,10 +11,42 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @author Tobias Nyholm
- * @author Damien Alexandre (damienalexandre)
  */
 class ProfilerController extends Controller
 {
+    /**
+     * @param Request $request
+     * @param string  $token
+     *
+     * @Route("/{token}/translation/edit", name="_profiler_translations_edit")
+     *
+     * @return Response
+     */
+    public function editAction(Request $request, $token)
+    {
+        if (!$request->isXmlHttpRequest()) {
+            return $this->redirectToRoute('_profiler', ['token' => $token]);
+        }
+
+        $message = $this->getMessage($request, $token);
+        $loco = $this->get('happyr.loco');
+
+        if ($request->isMethod('GET')) {
+            $loco->fetchTranslation($message);
+            return $this->render('HappyrLocoBundle:Profiler:edit.html.twig', [
+                'message'=>$message,
+                'key'=>$request->query->get('message_id')
+            ]);
+        }
+
+        //Assert: This is a POST request
+        $message->setTranslation($request->request->get('translation'));
+        $loco->updateTranslation($message);
+
+        return new Response($message->getTranslation());
+    }
+
+
     /**
      * @param Request $request
      * @param string  $token
@@ -30,24 +62,18 @@ class ProfilerController extends Controller
             return $this->redirectToRoute('_profiler', ['token' => $token]);
         }
 
-        $profiler = $this->get('profiler');
-        $profiler->disable();
-
-        $messageId = $request->request->get('message_id');
-
-        $profile = $profiler->loadProfile($token);
-        $messages = $profile->getCollector('translation')->getMessages();
-        $message = new Message($messages[$messageId]);
+        $message = $this->getMessage($request, $token);
 
         $saved = $this->get('happyr.loco')->flagTranslation($message);
 
         return new Response($saved ? 'OK' : 'ERROR');
     }
+
     /**
      * @param Request $request
      * @param string  $token
      *
-     * @Route("/{token}/translation/sync", name=""_profiler_translations_sync")
+     * @Route("/{token}/translation/sync", name="_profiler_translations_sync")
      * @Method("POST")
      *
      * @return Response
@@ -58,15 +84,7 @@ class ProfilerController extends Controller
             return $this->redirectToRoute('_profiler', ['token' => $token]);
         }
 
-        $profiler = $this->get('profiler');
-        $profiler->disable();
-
-        $messageId = $request->request->get('message_id');
-
-        $profile = $profiler->loadProfile($token);
-        $messages = $profile->getCollector('translation')->getMessages();
-        $message = new Message($messages[$messageId]);
-
+        $message = $this->getMessage($request, $token);
         $translation = $this->get('happyr.loco')->fetchTranslation($message, true);
 
         if ($translation !== null) {
@@ -79,6 +97,7 @@ class ProfilerController extends Controller
     /**
      * Save the selected translation to resources.
      *
+     * @author Damien Alexandre (damienalexandre)
      * @param Request $request
      * @param string  $token
      *
@@ -117,5 +136,28 @@ class ProfilerController extends Controller
         } else {
             return new Response("Can't save the translations.");
         }
+    }
+
+    /**
+     * @param Request $request
+     * @param string  $token
+     *
+     * @return Message
+     */
+    protected function getMessage(Request $request, $token)
+    {
+        $profiler = $this->get('profiler');
+        $profiler->disable();
+
+        $messageId = $request->request->get('message_id', $request->query->get('message_id'));
+
+        $profile = $profiler->loadProfile($token);
+        $messages = $profile->getCollector('translation')->getMessages();
+        if (!isset($messages[$messageId])) {
+            throw $this->createNotFoundException(sprintf('No message with key "%s" was found.', $messageId));
+        }
+        $message = new Message($messages[$messageId]);
+
+        return $message;
     }
 }
