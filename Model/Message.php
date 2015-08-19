@@ -8,31 +8,47 @@ class Message
 {
     /**
      * @var int
+     *
+     * This is the number of times the message occurs on a specific page
      */
     private $count;
 
     /**
      * @var string
+     *
+     * The domain the message belongs to
      */
     private $domain;
 
     /**
      * @var string
+     *
+     * The key/phrase you write in the source code
      */
     private $id;
 
     /**
      * @var string
+     *
+     * The locale the translations is on
      */
     private $locale;
 
     /**
      * @var int
+     *
+     * The current state of the translations. See Symfony\Component\Translation\DataCollectorTranslator
+     *
+     * MESSAGE_DEFINED = 0;
+     * MESSAGE_MISSING = 1;
+     * MESSAGE_EQUALS_FALLBACK = 2;
      */
     private $state;
 
     /**
      * @var string
+     *
+     * The translated string
      */
     private $translation;
 

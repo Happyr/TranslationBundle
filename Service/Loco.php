@@ -33,9 +33,9 @@ class Loco
 
     /**
      * @param HttpAdapterInterface $httpAdapter
-     * @param FilesystemUpdater           $fs
+     * @param FilesystemUpdater    $fs
      * @param array                $projects
-     * @param string                     $targetDir
+     * @param string               $targetDir
      */
     public function __construct(HttpAdapterInterface $httpAdapter, FilesystemUpdater $fs, array $projects, $targetDir)
     {
@@ -60,7 +60,7 @@ class Loco
             }
         }
 
-        if (count($uploaded)>0) {
+        if (count($uploaded) > 0) {
             $this->filesystemService->updateMessageCatalog($uploaded);
         }
 
@@ -68,7 +68,70 @@ class Loco
     }
 
     /**
+     * Fetch a message form Loco.
      *
+     * @param Message $message
+     */
+    public function fetchMessageFromLoco(Message $message)
+    {
+        $project = $this->getProject($message);
+
+        try {
+            $response = $this->httpAdapter->send(
+                'GET',
+                sprintf('translations/%s/%s', $message->getId(), $message->getLocale()),
+                ['query' => ['key' => $project['api_key']]]
+            );
+        } catch (HttpException $e) {
+            if ($e->getCode() === 404) {
+                //Message does not exist
+                return;
+            }
+        }
+
+        $logoTranslation = $response['translation'];
+
+        // update filesystem
+        if ($logoTranslation !== $message->getTranslation()) {
+            $this->filesystemService->updateMessageCatalog([$message]);
+        }
+
+        return $logoTranslation;
+    }
+
+    /**
+     * If there is something wrong with the translation, please flag it.
+     *
+     * @param Message $message
+     * @param int     $type    0: Fuzzy, 1: Error, 2: Review, 3: Pending
+     *
+     * @return bool
+     */
+    public function flagMessage(Message $message, $type = 0)
+    {
+        $project = $this->getProject($message);
+        $flags = ['fuzzy', 'error', 'review','pending'];
+
+        try {
+            $this->httpAdapter->send(
+                'POST',
+                sprintf('translations/%s/%s/flag', $message->getId(), $message->getLocale()),
+                [
+                    'query' => ['key' => $project['api_key']],
+                    'body' => ['flag' => $flags[$type]],
+                ]
+            );
+        } catch (HttpException $e) {
+            if ($e->getCode() === 404) {
+                //Message does not exist
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Create a new asset in Loco.
      *
      * @param Message $message
