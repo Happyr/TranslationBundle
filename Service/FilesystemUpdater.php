@@ -2,6 +2,7 @@
 
 namespace Happyr\LocoBundle\Service;
 
+use Happyr\LocoBundle\Model\Message;
 use Symfony\Component\Translation\Dumper\DumperInterface;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -9,7 +10,7 @@ use Symfony\Component\Translation\MessageCatalogue;
 /**
  * @author Tobias Nyholm
  *
- * Update the locale file system with changes in the cataloge
+ * Update the locale file system with changes in the catalogue
  */
 class FilesystemUpdater
 {
@@ -44,19 +45,20 @@ class FilesystemUpdater
 
     /**
      * Update message catalogues
-     * @param $messages
+     *
+     * @param Message[] $messages
      */
-    public function updateMessageCatalog($messages)
+    public function updateMessageCatalog(array $messages)
     {
         /** @var MessageCatalogue[] $catalogues */
         $catalogues = array();
         foreach ($messages as $m) {
-            $key = $m['locale'] . $m['domain'];
+            $key = $m->getLocale() . $m->getDomain();
             if(!isset($catalogues[$key])) {
-                $file = sprintf('%s/%s.%s.phps', $this->targetDir, $m['domain'], $m['locale']);
-                $catalogues[$key] = $this->loader->load($file, $m['locale'], $m['domain']);
+                $file = sprintf('%s/%s.%s.phps', $this->targetDir, $m->getDomain(), $m->getLocale());
+                $catalogues[$key] = $this->loader->load($file, $m->getLocale(), $m->getDomain());
             }
-            $catalogues[$key]->set($m['id'], '[Lorem Ipsum]', $m['domain']);
+            $catalogues[$key]->set($m['id'], '[Lorem Ipsum]', $m->getDomain());
         }
 
         foreach ($catalogues as $catalogue) {

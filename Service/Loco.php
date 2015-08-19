@@ -4,7 +4,7 @@ namespace Happyr\LocoBundle\Service;
 
 use Happyr\LocoBundle\Exception\HttpException;
 use Happyr\LocoBundle\Http\HttpAdapterInterface;
-
+use Happyr\LocoBundle\Model\Message;
 
 /**
  * @author Tobias Nyholm
@@ -53,7 +53,8 @@ class Loco
     public function createMessages(array $messages)
     {
         $uploaded = array();
-        foreach ($messages as $message) {
+        foreach ($messages as $data) {
+            $message = new Message($data);
             if ($this->uploadMessageToLoco($message)) {
                 $uploaded[] = $message;
             }
@@ -66,21 +67,15 @@ class Loco
         return count($uploaded);
     }
 
-
-
     /**
+     *
      * Create a new asset in Loco.
      *
-     * @param array $message array(
-     *                       count = 1,
-     *                       domain = "navigation",
-     *                       id = "logout",
-     *                       locale = "sv",
-     *                       state = 1,
-     *                       translation = "logout"
-     *                       )
+     * @param Message $message
+     *
+     * @return bool
      */
-    protected function uploadMessageToLoco(array $message)
+    protected function uploadMessageToLoco(Message $message)
     {
         $project = $this->getProject($message);
 
@@ -91,8 +86,8 @@ class Loco
                 [
                     'query' => ['key' => $project['api_key']],
                     'body' => [
-                        'id' => $message['id'],
-                        'name' => $message['id'],
+                        'id' => $message->getId(),
+                        'name' => $message->getId(),
                         'type' => 'text',
                     ],
                 ]
@@ -106,27 +101,27 @@ class Loco
 
         // if this project has multiple domains. Make sure to tag it
         if (!empty($project['domains'])) {
-            $this->addTag($project, $response['id'], $message['domain']);
+            $this->addTag($project, $response['id'], $message->getDomain());
         }
 
         return true;
     }
 
     /**
-     * @param array $message
+     * @param Message $message
      *
-     * @return mixed
+     * @return array
      */
-    protected function getProject(array $message)
+    protected function getProject(Message $message)
     {
-        if (isset($this->projects[$message['domain']])) {
-            return $this->projects[$message['domain']];
+        if (isset($this->projects[$message->getDomain()])) {
+            return $this->projects[$message->getDomain()];
         }
 
         // Return the first project that has the correct domain and locale
         foreach ($this->projects as $project) {
-            if (in_array($message['domain'], $project['domains'])) {
-                if (in_array($message['locales'], $project['locale'])) {
+            if (in_array($message->getDomain(), $project['domains'])) {
+                if (in_array($project['locales'], $message->getLocale())) {
                     return $project;
                 }
             }
