@@ -24,7 +24,7 @@
         </tbody>
     </table>
 
-<form action="{{ path('_profiler_save_translations', {'token': token}) }}" method="post"
+<form action="{{ path('_profiler_translations_create_assets', {'token': token}) }}" method="post"
       id="translations-list" onSubmit="return saveTranslations(this);" >
 
     <table>
@@ -79,7 +79,7 @@
             console.log("Flagging message "+key);
 
             Sfjs.request(
-                    "{{ path('_profiler_flag_translations', {'token': token}) }}",
+                    "{{ path('_profiler_translations_flag', {'token': token}) }}",
                     function(xhr) {
                         // Success
                         console.log(" - Success");
@@ -97,7 +97,7 @@
             console.log("Syncing message "+key);
 
             Sfjs.request(
-                    "{{ path('_profiler_sync_translations', {'token': token}) }}",
+                    "{{ path('_profiler_translations_sync', {'token': token}) }}",
                     function(xhr) {
                         // Success
                         console.log(" - Success");

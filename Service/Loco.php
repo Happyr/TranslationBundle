@@ -50,12 +50,11 @@ class Loco
      *
      * @return int number of messages created
      */
-    public function createMessages(array $messages)
+    public function createAssets(array $messages)
     {
         $uploaded = array();
-        foreach ($messages as $data) {
-            $message = new Message($data);
-            if ($this->uploadMessageToLoco($message)) {
+        foreach ($messages as $message) {
+            if ($this->createAsset($message)) {
                 $uploaded[] = $message;
             }
         }
@@ -68,11 +67,11 @@ class Loco
     }
 
     /**
-     * Fetch a message form Loco.
+     * Fetch a translation form Loco.
      *
      * @param Message $message
      */
-    public function fetchMessageFromLoco(Message $message)
+    public function fetchTranslation(Message $message, $updateFs = false)
     {
         $project = $this->getProject($message);
 
@@ -92,12 +91,42 @@ class Loco
         $logoTranslation = $response['translation'];
 
         // update filesystem
-        if ($logoTranslation !== $message->getTranslation()) {
+        if ($updateFs && $logoTranslation !== $message->getTranslation()) {
             $message->setTranslation($logoTranslation);
             $this->filesystemService->updateMessageCatalog([$message]);
         }
 
         return $logoTranslation;
+    }
+
+    /**
+     * Update the translation in Loco
+     *
+     * @param Message $message
+     */
+    public function updateTranslation(Message $message)
+    {
+        $project = $this->getProject($message);
+
+        try {
+            $response = $this->httpAdapter->send(
+                'GET',
+                sprintf('translations/%s/%s', $message->getId(), $message->getLocale()),
+                [
+                    'query' => ['key' => $project['api_key']],
+                    'body'=>$message->getTranslation(),
+                ]
+            );
+        } catch (HttpException $e) {
+            if ($e->getCode() === 404) {
+                //Message does not exist
+                return false;
+            }
+        }
+
+        $this->filesystemService->updateMessageCatalog([$message]);
+
+        return true;
     }
 
     /**
@@ -108,7 +137,7 @@ class Loco
      *
      * @return bool
      */
-    public function flagMessage(Message $message, $type = 0)
+    public function flagTranslation(Message $message, $type = 0)
     {
         $project = $this->getProject($message);
         $flags = ['fuzzy', 'error', 'review','pending'];
@@ -139,7 +168,7 @@ class Loco
      *
      * @return bool
      */
-    protected function uploadMessageToLoco(Message $message)
+    protected function createAsset(Message $message)
     {
         $project = $this->getProject($message);
 
@@ -165,7 +194,7 @@ class Loco
 
         // if this project has multiple domains. Make sure to tag it
         if (!empty($project['domains'])) {
-            $this->addTag($project, $response['id'], $message->getDomain());
+            $this->addTagToAsset($project, $response['id'], $message->getDomain());
         }
 
         return true;
@@ -197,7 +226,7 @@ class Loco
      * @param $messageId
      * @param $domain
      */
-    protected function addTag($project, $messageId, $domain)
+    protected function addTagToAsset($project, $messageId, $domain)
     {
         $this->httpAdapter->send(
             'POST',
@@ -212,7 +241,7 @@ class Loco
     /**
      * Download all the translations from Loco.
      */
-    public function download()
+    public function downloadAllTranslations()
     {
         if (!is_dir($this->targetDir)) {
             mkdir($this->targetDir, 0777, true);

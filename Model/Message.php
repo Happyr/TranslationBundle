@@ -49,7 +49,7 @@ class Message
     /**
      * @var string
      *
-     * The translated string
+     * The translated string. This is the preview of the message. Ie no placeholders is visible.
      */
     private $translation;
 

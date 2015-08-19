@@ -19,7 +19,7 @@ class ProfilerController extends Controller
      * @param Request $request
      * @param string  $token
      *
-     * @Route("/{token}/translation/flag", name="_profiler_flag_translations")
+     * @Route("/{token}/translation/flag", name="_profiler_translations_flag")
      * @Method("POST")
      *
      * @return Response
@@ -39,7 +39,7 @@ class ProfilerController extends Controller
         $messages = $profile->getCollector('translation')->getMessages();
         $message = new Message($messages[$messageId]);
 
-        $saved = $this->get('happyr.loco')->flagMessage($message);
+        $saved = $this->get('happyr.loco')->flagTranslation($message);
 
         return new Response($saved ? 'OK' : 'ERROR');
     }
@@ -47,7 +47,7 @@ class ProfilerController extends Controller
      * @param Request $request
      * @param string  $token
      *
-     * @Route("/{token}/translation/sync", name="_profiler_sync_translations")
+     * @Route("/{token}/translation/sync", name=""_profiler_translations_sync")
      * @Method("POST")
      *
      * @return Response
@@ -67,7 +67,7 @@ class ProfilerController extends Controller
         $messages = $profile->getCollector('translation')->getMessages();
         $message = new Message($messages[$messageId]);
 
-        $translation = $this->get('happyr.loco')->fetchMessageFromLoco($message);
+        $translation = $this->get('happyr.loco')->fetchTranslation($message, true);
 
         if ($translation !== null) {
             return new Response($translation);
@@ -82,12 +82,12 @@ class ProfilerController extends Controller
      * @param Request $request
      * @param string  $token
      *
-     * @Route("/{token}/translation/save", name="_profiler_save_translations")
+     * @Route("/{token}/translation/create-asset", name="_profiler_translations_create_assets")
      * @Method("POST")
      *
      * @return Response
      */
-    public function saveAction(Request $request, $token)
+    public function createAssetsAction(Request $request, $token)
     {
         if (!$request->isXmlHttpRequest()) {
             return $this->redirectToRoute('_profiler', ['token' => $token]);
@@ -105,8 +105,12 @@ class ProfilerController extends Controller
         $dataCollector = $profile->getCollector('translation');
         $toSave = array_intersect_key($dataCollector->getMessages(), array_flip($selected));
 
-        $loco = $this->get('happyr.loco');
-        $saved = $loco->createMessages($toSave);
+        $messages = array();
+        foreach ($toSave as $data) {
+            $messages[] = new Message($data);
+        }
+
+        $saved = $this->get('happyr.loco')->createAssets($messages);
 
         if ($saved > 0) {
             return new Response(sprintf('%s translation keys saved!', $saved));

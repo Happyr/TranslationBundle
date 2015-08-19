@@ -25,7 +25,7 @@ class DownloadCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getContainer()->get('happyr.loco')->download();
+        $this->getContainer()->get('happyr.loco')->downloadAllTranslations();
         $output->writeln('Download complete');
     }
 }
