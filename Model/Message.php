@@ -1,4 +1,5 @@
 <?php
+
 namespace Happyr\LocoBundle\Model;
 
 /**
@@ -54,7 +55,7 @@ class Message
 
     /**
      * @param array $data
-     * array( count = 1, domain = "navigation", id = "logout", locale = "sv", state = 1, translation = "logout" )
+     *                    array( count = 1, domain = "navigation", id = "logout", locale = "sv", state = 1, translation = "logout" )
      */
     public function __construct(array $data)
     {
@@ -185,6 +186,4 @@ class Message
 
         return $this;
     }
-
-
 }

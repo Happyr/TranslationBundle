@@ -44,7 +44,7 @@ class FilesystemUpdater
     }
 
     /**
-     * Update message catalogues
+     * Update message catalogues.
      *
      * @param Message[] $messages
      */
@@ -53,8 +53,8 @@ class FilesystemUpdater
         /** @var MessageCatalogue[] $catalogues */
         $catalogues = array();
         foreach ($messages as $m) {
-            $key = $m->getLocale() . $m->getDomain();
-            if(!isset($catalogues[$key])) {
+            $key = $m->getLocale().$m->getDomain();
+            if (!isset($catalogues[$key])) {
                 $file = sprintf('%s/%s.%s.phps', $this->targetDir, $m->getDomain(), $m->getLocale());
                 $catalogues[$key] = $this->loader->load($file, $m->getLocale(), $m->getDomain());
             }
@@ -68,7 +68,7 @@ class FilesystemUpdater
         }
 
         foreach ($catalogues as $catalogue) {
-            $this->dumper->dump($catalogue, ['path'=>$this->targetDir]);
+            $this->dumper->dump($catalogue, ['path' => $this->targetDir]);
         }
     }
 }

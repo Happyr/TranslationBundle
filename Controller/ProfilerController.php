@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ProfilerController extends Controller
 {
-
     /**
      * @param Request $request
      * @param string  $token
@@ -42,7 +41,7 @@ class ProfilerController extends Controller
 
         $saved = $this->get('happyr.loco')->flagMessage($message);
 
-        return new Response($saved?'OK':'ERROR');
+        return new Response($saved ? 'OK' : 'ERROR');
     }
     /**
      * @param Request $request
@@ -73,7 +72,8 @@ class ProfilerController extends Controller
         if ($translation !== null) {
             return new Response($translation);
         }
-        return new Response("Asset not found", 404);
+
+        return new Response('Asset not found', 404);
     }
 
     /**
@@ -114,6 +114,4 @@ class ProfilerController extends Controller
             return new Response("Can't save the translations.");
         }
     }
-
-
 }

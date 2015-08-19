@@ -24,6 +24,7 @@ class Guzzle6Adapter implements HttpAdapterInterface
         } catch (ClientException $e) {
             throw new HttpException('Could not transfer data to Loco', $e->getCode(), $e);
         }
+
         return $response->json();
     }
 

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Happyr\LocoBundle\Translation;
 
 use Symfony\Component\Translation\Dumper\FileDumper;

@@ -18,7 +18,7 @@ class Guzzle5Adapter implements HttpAdapterInterface
     public function send($method, $url, $data)
     {
         $client = new Client([
-            'base_url' => HttpAdapterInterface::BASE_URL
+            'base_url' => HttpAdapterInterface::BASE_URL,
         ]);
 
         try {

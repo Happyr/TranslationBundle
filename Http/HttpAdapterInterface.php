@@ -17,9 +17,10 @@ interface HttpAdapterInterface
     /**
      * @param string $method
      * @param string $url
-     * @param array $data
+     * @param array  $data
      *
      * @return array
+     *
      * @throws HttpException
      */
     public function send($method, $url, $data);

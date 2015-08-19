@@ -28,6 +28,4 @@ class DownloadCommand extends ContainerAwareCommand
         $this->getContainer()->get('happyr.loco')->download();
         $output->writeln('Download complete');
     }
-
-
 }
