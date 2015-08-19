@@ -126,6 +126,7 @@ class Loco
                     //Try again
                     return $this->updateTranslation($message);
                 }
+
                 return false;
             }
             throw $e;
@@ -275,8 +276,7 @@ class Loco
 
     /**
      * Synchronize all the translations with Loco. This will keep placeholders. This function is slower
-     * than just to download the translations
-     *
+     * than just to download the translations.
      */
     public function synchronizeAllTranslations()
     {
@@ -323,8 +323,7 @@ class Loco
             }
 
             $messages = array();
-            foreach ($response as $id => $translation)
-            {
+            foreach ($response as $id => $translation) {
                 $messages[] = new Message([
                     'count' => 1,
                     'domain' => $domain,
@@ -367,7 +366,8 @@ class Loco
     }
 
     /**
-     * Delete all translations for this asset
+     * Delete all translations for this asset.
+     *
      * @param Message $message
      *
      * @throws HttpException
@@ -377,7 +377,7 @@ class Loco
     {
         $project = $this->getProject($message);
 
-        foreach($project['locales'] as $locale) {
+        foreach ($project['locales'] as $locale) {
             try {
                 $this->httpAdapter->send(
                     'DELETE',

@@ -115,16 +115,12 @@ class ProfilerController extends Controller
 
         $messages = $this->getSelectedMessages($request, $token);
         if (empty($messages)) {
-            return new Response('No key selected.');
+            return new Response('No translations selected.');
         }
 
         $saved = $this->get('happyr.loco')->createAssets($messages);
 
-        if ($saved > 0) {
-            return new Response(sprintf('%s translation keys saved!', $saved));
-        } else {
-            return new Response("Can't save the translations.");
-        }
+        return new Response(sprintf('%s new assets created!', $saved));
     }
 
     /**
@@ -150,7 +146,6 @@ class ProfilerController extends Controller
         return $message;
     }
 
-
     /**
      * @param Request $request
      * @param string  $token
@@ -174,13 +169,11 @@ class ProfilerController extends Controller
         $messages = array();
         foreach ($toSave as $data) {
             //We do not want do add the placeholder to Loco. That messes up the stats.
-            $data['translation']='';
+            $data['translation'] = '';
 
             $messages[] = new Message($data);
         }
 
         return $messages;
     }
-
-
 }
