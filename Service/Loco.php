@@ -111,7 +111,7 @@ class Loco
         $project = $this->getProject($message);
 
         try {
-            $r = $this->httpAdapter->send(
+            $this->httpAdapter->send(
                 'POST',
                 sprintf('translations/%s/%s', $message->getId(), $message->getLocale()),
                 [
@@ -200,6 +200,9 @@ class Loco
             }
             throw $e;
         }
+
+        // Loco adds a translation to the default language automatically.
+        $this->removeAllTranslations($message);
 
         // if this project has multiple domains. Make sure to tag it
         if (!empty($project['domains'])) {
@@ -360,6 +363,36 @@ class Loco
             $path = sprintf('%s/%s.%s.%s', $this->targetDir, $domain, $locale, 'phps');
 
             $data[$url] = $path;
+        }
+    }
+
+    /**
+     * Delete all translations for this asset
+     * @param Message $message
+     *
+     * @throws HttpException
+     * @throws \Exception
+     */
+    protected function removeAllTranslations(Message $message)
+    {
+        $project = $this->getProject($message);
+
+        foreach($project['locales'] as $locale) {
+            try {
+                $this->httpAdapter->send(
+                    'DELETE',
+                    sprintf('translations/%s/%s', $message->getId(), $locale),
+                    [
+                        'query' => ['key' => $project['api_key']],
+                    ]
+                );
+            } catch (HttpException $e) {
+                if ($e->getCode() === 404) {
+                    //The asset was not translated
+                    continue;
+                }
+                throw $e;
+            }
         }
     }
 }
