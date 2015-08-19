@@ -7,7 +7,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * This command is good to run before you ship your code to production.
+ * Once you have downloaded all the translations you may want to synchronize with the progress from the translators.
+ * This command will keep your placeholders for missing translations.
  */
 class SynchronizeCommand extends ContainerAwareCommand
 {

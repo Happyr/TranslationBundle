@@ -18,6 +18,15 @@ When you have added new translations you may submit these to Loco by the WebProf
 
 ![New translations to Loco](Resources/doc/images/profile-translation-example.gif)
 
+You may also change translations and flag them from the same WebProfiler page. 
+
+When you want to fetch new translations from Loco you should run the synchronize command. This command will
+keep your current placeholders from missing translations. 
+
+``` bash
+php app/console translation:loco:download
+```
+
 ## Install
 
 Install the bundle with `composer require happyr/loco-bundle`
