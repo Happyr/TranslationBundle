@@ -33,9 +33,10 @@ class ProfilerController extends Controller
 
         if ($request->isMethod('GET')) {
             $loco->fetchTranslation($message);
+
             return $this->render('HappyrLocoBundle:Profiler:edit.html.twig', [
-                'message'=>$message,
-                'key'=>$request->query->get('message_id')
+                'message' => $message,
+                'key' => $request->query->get('message_id'),
             ]);
         }
 
@@ -45,7 +46,6 @@ class ProfilerController extends Controller
 
         return new Response($message->getTranslation());
     }
-
 
     /**
      * @param Request $request
@@ -98,6 +98,7 @@ class ProfilerController extends Controller
      * Save the selected translation to resources.
      *
      * @author Damien Alexandre (damienalexandre)
+     *
      * @param Request $request
      * @param string  $token
      *
@@ -112,21 +113,9 @@ class ProfilerController extends Controller
             return $this->redirectToRoute('_profiler', ['token' => $token]);
         }
 
-        $profiler = $this->get('profiler');
-        $profiler->disable();
-
-        $selected = $request->request->get('selected');
-        if (!$selected || count($selected) == 0) {
+        $messages = $this->getSelectedMessages($request, $token);
+        if (empty($messages)) {
             return new Response('No key selected.');
-        }
-
-        $profile = $profiler->loadProfile($token);
-        $dataCollector = $profile->getCollector('translation');
-        $toSave = array_intersect_key($dataCollector->getMessages(), array_flip($selected));
-
-        $messages = array();
-        foreach ($toSave as $data) {
-            $messages[] = new Message($data);
         }
 
         $saved = $this->get('happyr.loco')->createAssets($messages);
@@ -160,4 +149,35 @@ class ProfilerController extends Controller
 
         return $message;
     }
+
+
+    /**
+     * @param Request $request
+     * @param string  $token
+     *
+     * @return array
+     */
+    protected function getSelectedMessages(Request $request, $token)
+    {
+        $profiler = $this->get('profiler');
+        $profiler->disable();
+
+        $selected = $request->request->get('selected');
+        if (!$selected || count($selected) == 0) {
+            return array();
+        }
+
+        $profile = $profiler->loadProfile($token);
+        $dataCollector = $profile->getCollector('translation');
+        $toSave = array_intersect_key($dataCollector->getMessages(), array_flip($selected));
+
+        $messages = array();
+        foreach ($toSave as $data) {
+            $messages[] = new Message($data);
+        }
+
+        return $messages;
+    }
+
+
 }

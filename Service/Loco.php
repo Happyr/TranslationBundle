@@ -101,7 +101,7 @@ class Loco
     }
 
     /**
-     * Update the translation in Loco
+     * Update the translation in Loco.
      *
      * @param Message $message
      */
@@ -110,12 +110,12 @@ class Loco
         $project = $this->getProject($message);
 
         try {
-            $response = $this->httpAdapter->send(
+            $this->httpAdapter->send(
                 'POST',
                 sprintf('translations/%s/%s', $message->getId(), $message->getLocale()),
                 [
                     'query' => ['key' => $project['api_key']],
-                    'body'=>$message->getTranslation(),
+                    'body' => $message->getTranslation(),
                 ]
             );
         } catch (HttpException $e) {
