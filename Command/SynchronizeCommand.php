@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * This command is good to run before you ship your code to production.
  */
-class DownloadCommand extends ContainerAwareCommand
+class SynchronizeCommand extends ContainerAwareCommand
 {
     /**
      * {@inheritdoc}
@@ -17,15 +17,15 @@ class DownloadCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('translation:loco:download')
-            ->setDescription('Replace your local files with the latest from Loco.');
+            ->setName('translation:loco:sync')
+            ->setDescription('Sync all your translations with Loco. Leave place holders for missing translations.');
     }
     /**
      * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getContainer()->get('happyr.loco')->downloadAllTranslations();
-        $output->writeln('Download complete');
+        $this->getContainer()->get('happyr.loco')->synchronizeAllTranslations();
+        $output->writeln('Synchronization complete');
     }
 }

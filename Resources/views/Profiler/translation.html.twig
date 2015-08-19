@@ -46,7 +46,7 @@
                         <input type="checkbox" disabled>
                     {% endif %}
                 </td>
-                <td><code>{{ translator.state(message) }}</code></td>
+                <td><code class="state">{{ translator.state(message) }}</code></td>
                 <td><code>{{ message.locale }}</code></td>
                 <td><code>{{ message.domain }}</code></td>
                 <td>
@@ -76,6 +76,25 @@
 </form>
 
     <script type="text/javascript">
+        /**
+         * Clear the state field and remove the checkbox
+         * @param key
+         */
+        function clearState(key) {
+            var row = document.getElementById(key);
+            var cell = row.getElementsByClassName("state");
+            cell[0].innerHTML = "";
+
+            // disable the checkbox
+            var inputs = row.getElementsByTagName("input");
+            for (var i = 0; i < inputs.length; i++) {
+                if (inputs[i].type == "checkbox" && inputs[i].name == "translationKey") {
+                    inputs[i].checked = false;
+                    inputs[i].disabled = true;
+                }
+            }
+        }
+
         function flagMessage(key) {
             Sfjs.request(
                     "{{ path('_profiler_translations_flag', {'token': token}) }}",
@@ -98,6 +117,10 @@
                         // Success
                         var el = document.getElementById(key).getElementsByClassName("translation");
                         el[0].innerHTML = xhr.responseText;
+
+                        if (xhr.responseText !== "") {
+                            clearState(key);
+                        }
                     },
                     function(xhr) {
                         // Error
@@ -114,7 +137,6 @@
                     "{{ path('_profiler_translations_edit', {'token': token}) }}?" + serializeQueryString({message_id: key}),
                     function(xhr) {
                         // Success
-                        console.log(" - Success");
                         var el = document.getElementById(key).getElementsByClassName("translation");
                         el[0].innerHTML = xhr.responseText;
                     },
@@ -134,6 +156,10 @@
                         // Success
                         var el = document.getElementById(key).getElementsByClassName("translation");
                         el[0].innerHTML = xhr.responseText;
+
+                        if (xhr.responseText !== "") {
+                            clearState(key);
+                        }
                     },
                     function(xhr) {
                         // Error

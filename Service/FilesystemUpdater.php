@@ -61,7 +61,7 @@ class FilesystemUpdater
 
             $translation = $m->getTranslation();
             if (empty($translation)) {
-                $translation = '[Lorem Ipsum]';
+                $translation = sprintf('[%s]', $m->getId());
             }
 
             $catalogues[$key]->set($m->getId(), $translation, $m->getDomain());

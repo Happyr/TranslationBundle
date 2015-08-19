@@ -86,6 +86,7 @@ class Loco
                 //Message does not exist
                 return;
             }
+            throw $e;
         }
 
         $logoTranslation = $response['translation'];
@@ -110,7 +111,7 @@ class Loco
         $project = $this->getProject($message);
 
         try {
-            $this->httpAdapter->send(
+            $r = $this->httpAdapter->send(
                 'POST',
                 sprintf('translations/%s/%s', $message->getId(), $message->getLocale()),
                 [
@@ -120,9 +121,14 @@ class Loco
             );
         } catch (HttpException $e) {
             if ($e->getCode() === 404) {
-                //Message does not exist
+                //Asset does not exist
+                if ($this->createAsset($message)) {
+                    //Try again
+                    return $this->updateTranslation($message);
+                }
                 return false;
             }
+            throw $e;
         }
 
         $this->filesystemService->updateMessageCatalog([$message]);
@@ -157,6 +163,7 @@ class Loco
                 //Message does not exist
                 return false;
             }
+            throw $e;
         }
 
         return true;
@@ -191,6 +198,7 @@ class Loco
                 //conflict.. ignore
                 return false;
             }
+            throw $e;
         }
 
         // if this project has multiple domains. Make sure to tag it
@@ -240,7 +248,8 @@ class Loco
     }
 
     /**
-     * Download all the translations from Loco.
+     * Download all the translations from Loco. This will replace all the local files.
+     * This is a quick method of getting all the latest translations and assets.
      */
     public function downloadAllTranslations()
     {
@@ -259,6 +268,72 @@ class Loco
             }
         }
         $this->httpAdapter->downloadFiles($data);
+    }
+
+    /**
+     * Synchronize all the translations with Loco. This will keep placeholders. This function is slower
+     * than just to download the translations
+     *
+     */
+    public function synchronizeAllTranslations()
+    {
+        foreach ($this->projects as $name => $config) {
+            if (empty($config['domains'])) {
+                $this->doSynchronizeDomain($config, $name, false);
+            } else {
+                foreach ($config['domain'] as $domain) {
+                    $this->doSynchronizeDomain($config, $domain, true);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param array $config
+     * @param       $domain
+     * @param       $useDomainAsFilter
+     */
+    protected function doSynchronizeDomain(array &$config, $domain, $useDomainAsFilter)
+    {
+        $query = array(
+            'key' => $config['api_key'],
+            'format' => 'symfony',
+            'index' => 'id',
+        );
+
+        if ($useDomainAsFilter) {
+            $query['filter'] = $domain;
+        }
+
+        foreach ($config['locales'] as $locale) {
+            try {
+                $response = $this->httpAdapter->send(
+                    'GET',
+                    sprintf('export/locale/%s.%s', $locale, 'json'),
+                    [
+                        'query' => $query,
+                    ]
+                );
+            } catch (HttpException $e) {
+                //TODO error handling
+                throw $e;
+            }
+
+            $messages = array();
+            foreach ($response as $id => $translation)
+            {
+                $messages[] = new Message([
+                    'count' => 1,
+                    'domain' => $domain,
+                    'id' => $id,
+                    'locale' => $locale,
+                    'state' => 1,
+                    'translation' => $translation,
+                ]);
+            }
+
+            $this->filesystemService->updateMessageCatalog($messages);
+        }
     }
 
     /**

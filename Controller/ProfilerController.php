@@ -173,6 +173,9 @@ class ProfilerController extends Controller
 
         $messages = array();
         foreach ($toSave as $data) {
+            //We do not want do add the placeholder to Loco. That messes up the stats.
+            $data['translation']='';
+
             $messages[] = new Message($data);
         }
 
