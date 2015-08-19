@@ -93,6 +93,7 @@ class Loco
 
         // update filesystem
         if ($logoTranslation !== $message->getTranslation()) {
+            $message->setTranslation($logoTranslation);
             $this->filesystemService->updateMessageCatalog([$message]);
         }
 

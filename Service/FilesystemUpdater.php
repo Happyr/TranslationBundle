@@ -58,7 +58,13 @@ class FilesystemUpdater
                 $file = sprintf('%s/%s.%s.phps', $this->targetDir, $m->getDomain(), $m->getLocale());
                 $catalogues[$key] = $this->loader->load($file, $m->getLocale(), $m->getDomain());
             }
-            $catalogues[$key]->set($m['id'], '[Lorem Ipsum]', $m->getDomain());
+
+            $translation = $m->getTranslation();
+            if (empty($translation)) {
+                $translation = '[Lorem Ipsum]';
+            }
+
+            $catalogues[$key]->set($m->getId(), $translation, $m->getDomain());
         }
 
         foreach ($catalogues as $catalogue) {

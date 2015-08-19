@@ -35,9 +35,10 @@
             <th>Domain</th>
             <th>Id</th>
             <th>Message Preview</th>
+            <th></th>
         </tr>
         {% for key, message in collector.messages %}
-            <tr>
+            <tr id="{{ key }}">
                 <td>
                     {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_MISSING') %}
                         <input type="checkbox" name="translationKey" value="{{ key }}" checked="checked">
@@ -52,7 +53,10 @@
                     <code>{{ message.id }}</code>
                     {% if message.count > 1 %}<br><small style="color: gray;">(used {{ message.count }} times)</small>{% endif %}
                 </td>
-                <td><code>{{ message.translation }}</code></td>
+                <td><code class="translation">{{ message.translation }}</code></td>
+                <td><a href="javascript:void(0);" onclick='flagMessage("{{ key }}")'>Flag</a>
+                    <a href="javascript:void(0);" onclick='syncMessage("{{ key }}")'>Sync</a>
+                </td>
             </tr>
         {% endfor %}
     </table>
@@ -71,14 +75,43 @@
 </form>
 
     <script type="text/javascript">
-        function openParameters(link) {
-            "use strict";
+        function flagMessage(key) {
+            console.log("Flagging message "+key);
 
-            var imgs = link.children,
-                    target = link.getAttribute('data-target-id');
+            Sfjs.request(
+                    "{{ path('_profiler_flag_translations', {'token': token}) }}",
+                    function(xhr) {
+                        // Success
+                        console.log(" - Success");
+                    },
+                    function(xhr) {
+                        // Error
+                        console.log(" - Error");
+                    },
+                    serializeQueryString({message_id: key}),
+                    { method: 'POST' }
+            );
+        }
 
-            Sfjs.toggle(target, imgs[0], imgs[1]);
-        };
+        function syncMessage(key) {
+            console.log("Syncing message "+key);
+
+            Sfjs.request(
+                    "{{ path('_profiler_sync_translations', {'token': token}) }}",
+                    function(xhr) {
+                        // Success
+                        console.log(" - Success");
+                        var el = document.getElementById(key).getElementsByClassName("translation");
+                        el[0].innerHTML = xhr.responseText;
+                    },
+                    function(xhr) {
+                        // Error
+                        console.log(" - Error");
+                    },
+                    serializeQueryString({message_id: key}),
+                    { method: 'POST' }
+            );
+        }
 
         var serializeQueryString = function(obj, prefix) {
             var str = [];
