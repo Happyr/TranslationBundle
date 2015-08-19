@@ -79,7 +79,7 @@ _happyr_loco:
 
 # Credits
 
-This bundle is both inspired by and is using some of the code from [Jokicode.com](http://jolicode.com/blog/translation-workflow-with-symfony2)
+This bundle is both inspired by and is using some of the code from [@damienalexandre](https://github.com/damienalexandre) / [JoliCode](http://jolicode.com/blog/translation-workflow-with-symfony2)
 and from Cliff Odijk's (@cmodijk) [LocoBundle](https://github.com/JCID/JcidLocoBundle).
 
 I would also thank Tim Whitlock (@timwhitlock) for creating [Loco](https://localise.biz).
