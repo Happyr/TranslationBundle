@@ -14,7 +14,7 @@ services:
   # Custom data_collector to use our own template
   happyr.loco.data_collector.translation:
     class: Symfony\Component\Translation\DataCollector\TranslationDataCollector
-    arguments: [ @translator.data_collector ]
+    arguments: [ @?translator.data_collector ]
     tags:
       - { name: 'data_collector', template: "@HappyrLoco/Profiler/translation", id: "translation", priority: 200 }
 
