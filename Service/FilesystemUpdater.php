@@ -68,7 +68,12 @@ class FilesystemUpdater
         }
 
         foreach ($catalogues as $catalogue) {
-            $this->dumper->dump($catalogue, ['path' => $this->targetDir]);
+            try {
+                $this->dumper->dump($catalogue, ['path' => $this->targetDir]);
+            } catch(\ErrorException $e) {
+                // Could not save file
+                // TODO better error handling
+            }
         }
     }
 }
