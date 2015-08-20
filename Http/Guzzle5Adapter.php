@@ -45,7 +45,9 @@ class Guzzle5Adapter implements HttpAdapterInterface
         }
 
         // Results is a GuzzleHttp\BatchResults object.
-        $results = Pool::batch($client, $requests);
+        $results = Pool::batch($client, $requests, [
+            'pool_size' => 5,
+        ]);
 
         // Retrieve all failures.
         foreach ($results->getFailures() as $requestException) {
