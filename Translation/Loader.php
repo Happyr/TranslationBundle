@@ -2,16 +2,17 @@
 
 namespace Happyr\LocoBundle\Translation;
 
-use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\Exception\InvalidResourceException;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\Translation\MessageCatalogue;
 
 /**
+ * @author Tobias Nyholm
  * @author Cliff Odijk (cmodijk)
  */
-class Loader extends ArrayLoader implements LoaderInterface
+class Loader implements LoaderInterface
 {
     public function load($resource, $locale, $domain = 'messages')
     {
@@ -24,7 +25,9 @@ class Loader extends ArrayLoader implements LoaderInterface
         }
 
         $messages = require $resource;
-        $catalogue = parent::load($messages, $locale, $domain);
+        $catalogue = new MessageCatalogue($locale);
+        $catalogue->add($messages, $domain);
+
         $catalogue->addResource(new FileResource($resource));
 
         return $catalogue;

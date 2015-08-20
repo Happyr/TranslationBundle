@@ -299,7 +299,8 @@ class Loco
     {
         $query = array(
             'key' => $config['api_key'],
-            'format' => 'symfony',
+            // 'Zend' will give us a flat array
+            'format' => 'zend',
             'index' => 'id',
         );
 
@@ -347,7 +348,8 @@ class Loco
     {
         $query = array(
             'key' => $config['api_key'],
-            'format' => 'symfony',
+            // 'Zend' will give us a flat array
+            'format' => 'zend',
             'index' => 'id',
         );
 
