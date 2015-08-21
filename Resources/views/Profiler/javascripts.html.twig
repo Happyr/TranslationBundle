@@ -33,6 +33,8 @@
                 "{{ path('_profiler_translations_flag', {'token': token}) }}",
                 function(xhr) {
                     // Success
+                    var el = document.getElementById(key).getElementsByClassName("flag");
+                    el[0].innerHTML = "Flag - OK";
                 },
                 function(xhr) {
                     // Error

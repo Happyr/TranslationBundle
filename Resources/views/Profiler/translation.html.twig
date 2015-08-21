@@ -35,7 +35,7 @@
             <th>Domain</th>
             <th>Id</th>
             <th>Message Preview</th>
-            <th></th>
+            <th width="60px">Actions</th>
         </tr>
         {% for key, message in collector.messages %}
             <tr id="{{ key }}">
@@ -77,9 +77,9 @@
                     {% endif %}
                 </td>
                 <td><code class="translation">{{ message.translation }}</code></td>
-                <td><a href="javascript:void(0);" onclick='flagMessage("{{ key }}")'>Flag</a>
-                    <a href="javascript:void(0);" onclick='syncMessage("{{ key }}")'>Sync</a>
-                    <a href="javascript:void(0);" onclick='getEditForm("{{ key }}")'>Edit</a>
+                <td><a class="flag" href="javascript:void(0);" onclick='flagMessage("{{ key }}")'>Flag</a><br />
+                    <a class="sync"  href="javascript:void(0);" onclick='syncMessage("{{ key }}")'>Sync</a><br />
+                    <a class="edit"  href="javascript:void(0);" onclick='getEditForm("{{ key }}")'>Edit</a>
                 </td>
             </tr>
         {% endfor %}

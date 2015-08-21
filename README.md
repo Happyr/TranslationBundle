@@ -16,9 +16,11 @@ php app/console translation:loco:download
 
 When you have added new translations you may submit these to Loco by the WebProfiler toolbar.
 
-![New translations to Loco](Resources/doc/images/profile-translation-example.gif)
+![New translations to Loco](Resources/doc/images/missing-translation-example.gif)
 
 You may also change translations and flag them from the same WebProfiler page. 
+
+![Manage translations with Loco](Resources/doc/images/edit-flag-sync-example.gif)
 
 When you want to fetch new translations from Loco you should run the synchronize command. This command will
 keep your current placeholders from missing translations. 
