@@ -54,8 +54,24 @@ class Message
     private $translation;
 
     /**
+     * @var int
+     *
+     * The number which we are feeding a transChoice with
+     * Used only in Symfony >2.8
+     */
+    private $transChoiceNumber;
+
+    /**
+     * @var array
+     *
+     * The parameters sent to the translations
+     * Used only in Symfony >2.8
+     */
+    private $parameters;
+
+    /**
      * @param array $data
-     *                    array( count = 1, domain = "navigation", id = "logout", locale = "sv", state = 1, translation = "logout" )
+     *  array( count = 1, domain = "navigation", id = "logout", locale = "sv", state = 1, translation = "logout" )
      */
     public function __construct(array $data)
     {
@@ -65,6 +81,14 @@ class Message
         $this->locale = $data['locale'];
         $this->state = $data['state'];
         $this->translation = $data['translation'];
+
+        if (isset($data['transChoiceNumber'])) {
+            $this->transChoiceNumber = $data['transChoiceNumber'];
+        }
+
+        if (isset($data['parameters'])) {
+            $this->parameters = $data['parameters'];
+        }
     }
 
     /**
@@ -183,6 +207,54 @@ class Message
     public function setTranslation($translation)
     {
         $this->translation = $translation;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTransChoiceNumber()
+    {
+        return $this->transChoiceNumber;
+    }
+
+    /**
+     * @param int $transChoiceNumber
+     *
+     * @return $this
+     */
+    public function setTransChoiceNumber($transChoiceNumber)
+    {
+        $this->transChoiceNumber = $transChoiceNumber;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasParameters()
+    {
+        return !empty($this->parameters);
+    }
+
+    /**
+     * @param array $parameters
+     *
+     * @return $this
+     */
+    public function setParameters($parameters)
+    {
+        $this->parameters = $parameters;
 
         return $this;
     }

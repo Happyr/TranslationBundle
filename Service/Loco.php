@@ -196,6 +196,23 @@ class Loco
                     ],
                 ]
             );
+
+            if ($message->hasParameters()) {
+                // Send those parameter as a note to Loco
+                $notes='';
+                foreach ($message->getParameters() as $key => $value) {
+                    $notes .= 'Parameter: '.$key.' (i.e. : '.$value.")\n";
+                }
+
+                $this->httpAdapter->send(
+                    'PATCH',
+                    sprintf('assets/%s.json', $message->getId()),
+                    [
+                        'query' => ['key' => $project['api_key']],
+                        'json' => [ 'notes'=> $notes ],
+                    ]
+                );
+            }
         } catch (HttpException $e) {
             if ($e->getCode() === 409) {
                 //conflict.. ignore
@@ -359,8 +376,8 @@ class Loco
 
         foreach ($config['locales'] as $locale) {
             // Build url
-            $url = sprintf('export/locale/%s.%s?%s', $locale, 'phps', http_build_query($query));
-            $path = sprintf('%s/%s.%s.%s', $this->targetDir, $domain, $locale, 'phps');
+            $url = sprintf('export/locale/%s.%s?%s', $locale, FilesystemUpdater::FILE_EXTENSION, http_build_query($query));
+            $path = sprintf('%s/%s.%s.%s', $this->targetDir, $domain, $locale, FilesystemUpdater::FILE_EXTENSION);
 
             $data[$url] = $path;
         }

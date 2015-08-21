@@ -2,6 +2,7 @@
 
 namespace Happyr\LocoBundle\Translation;
 
+use Happyr\LocoBundle\Service\FilesystemUpdater;
 use Symfony\Component\Translation\Dumper\FileDumper;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -25,6 +26,6 @@ class Dumper extends FileDumper
      */
     protected function getExtension()
     {
-        return 'phps';
+        return FilesystemUpdater::FILE_EXTENSION;
     }
 }

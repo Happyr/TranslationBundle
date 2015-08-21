@@ -14,6 +14,8 @@ use Symfony\Component\Translation\MessageCatalogue;
  */
 class FilesystemUpdater
 {
+    const FILE_EXTENSION = 'phps';
+
     /**
      * @var LoaderInterface loader
      */
@@ -55,7 +57,7 @@ class FilesystemUpdater
         foreach ($messages as $m) {
             $key = $m->getLocale().$m->getDomain();
             if (!isset($catalogues[$key])) {
-                $file = sprintf('%s/%s.%s.phps', $this->targetDir, $m->getDomain(), $m->getLocale());
+                $file = sprintf('%s/%s.%s.%s', $this->targetDir, $m->getDomain(), $m->getLocale(), self::FILE_EXTENSION);
                 $catalogues[$key] = $this->loader->load($file, $m->getLocale(), $m->getDomain());
             }
 
