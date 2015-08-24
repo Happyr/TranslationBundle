@@ -1,8 +1,9 @@
 # Happyr Translation Bundle
 
-This bundle helps you to integrate with the Loco translation service. The key features of this bundle is: 
+This bundle helps you to integrate with a third party translation service. The bundle has been focused to integrate to 
+the [Loco](https://localise.biz) service. The key features of this bundle is: 
 
-* Easy to download all translations from https://localise.biz
+* Easy to download all translations from
 * Support for multiple projects
 * Create new translation assets by the Symfony WebProfiler
 * Edit, flag and synchronize the translation via the Symfony WebProfiler 
@@ -14,15 +15,15 @@ To download all translations form logo, simply run:
 php app/console happyr:translation:download
 ```
 
-When you have added new translations you may submit these to Loco by the WebProfiler toolbar.
+When you have added new translations you may submit these to your translation SaaS by the WebProfiler toolbar.
 
-![New translations to Loco](Resources/doc/images/missing-translation-example.gif)
+![New translations to SaaS](Resources/doc/images/missing-translation-example.gif)
 
 You may also change translations and flag them from the same WebProfiler page. 
 
-![Manage translations with Loco](Resources/doc/images/edit-flag-sync-example.gif)
+![Manage translations with SaaS](Resources/doc/images/edit-flag-sync-example.gif)
 
-When you want to fetch new translations from Loco you should run the synchronize command. This command will
+When you want to fetch new translations from your SaaS you should run the synchronize command. This command will
 keep your current placeholders from missing translations. 
 
 ``` bash
