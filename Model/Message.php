@@ -71,16 +71,19 @@ class Message
 
     /**
      * @param array $data
-     *  array( count = 1, domain = "navigation", id = "logout", locale = "sv", state = 1, translation = "logout" )
+     *                    array( count = 1, domain = "navigation", id = "logout", locale = "sv", state = 1, translation = "logout" )
      */
     public function __construct(array $data)
     {
-        $this->count = $data['count'];
         $this->domain = $data['domain'];
         $this->id = $data['id'];
         $this->locale = $data['locale'];
         $this->state = $data['state'];
         $this->translation = $data['translation'];
+
+        if (isset($data['count'])) {
+            $this->count = $data['count'];
+        }
 
         if (isset($data['transChoiceNumber'])) {
             $this->transChoiceNumber = $data['transChoiceNumber'];

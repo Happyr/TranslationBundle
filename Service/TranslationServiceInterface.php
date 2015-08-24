@@ -1,4 +1,5 @@
 <?php
+
 namespace Happyr\TranslationBundle\Service;
 
 use Happyr\TranslationBundle\Model\Message;
@@ -26,7 +27,7 @@ interface TranslationServiceInterface
      * If there is something wrong with the translation, please flag it.
      *
      * @param Message $message
-     * @param int     $type 0: Fuzzy, 1: Error, 2: Review, 3: Pending
+     * @param int     $type    0: Fuzzy, 1: Error, 2: Review, 3: Pending
      *
      * @return bool
      */

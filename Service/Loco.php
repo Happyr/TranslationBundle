@@ -128,7 +128,7 @@ class Loco implements TranslationServiceInterface
     public function flagTranslation(Message $message, $type = 0)
     {
         $project = $this->getProject($message);
-        $flags = ['fuzzy', 'error', 'review','pending'];
+        $flags = ['fuzzy', 'error', 'review', 'pending'];
 
         try {
             $this->httpAdapter->send(
@@ -179,7 +179,7 @@ class Loco implements TranslationServiceInterface
 
             if ($message->hasParameters()) {
                 // Send those parameter as a note to Loco
-                $notes='';
+                $notes = '';
                 foreach ($message->getParameters() as $key => $value) {
                     $notes .= 'Parameter: '.$key.' (i.e. : '.$value.")\n";
                 }
@@ -189,7 +189,7 @@ class Loco implements TranslationServiceInterface
                     sprintf('assets/%s.json', $message->getId()),
                     [
                         'query' => ['key' => $project['api_key']],
-                        'json' => [ 'notes'=> $notes ],
+                        'json' => ['notes' => $notes],
                     ]
                 );
             }

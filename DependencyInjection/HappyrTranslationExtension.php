@@ -23,6 +23,10 @@ class HappyrTranslationExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
+        if ($config['auto_add_assets']) {
+            $loader->load('autoAdd.yml');
+        }
+
         /*
          * Set an alias for the adapter
          */
