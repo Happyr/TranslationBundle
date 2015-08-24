@@ -2,7 +2,6 @@
 
 namespace Happyr\TranslationBundle\Translation;
 
-use Happyr\TranslationBundle\Service\FilesystemUpdater;
 use Symfony\Component\Translation\Dumper\FileDumper;
 use Symfony\Component\Translation\MessageCatalogue;
 
