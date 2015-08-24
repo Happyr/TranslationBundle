@@ -118,7 +118,18 @@ class ProfilerController extends Controller
             return new Response('No translations selected.');
         }
 
-        $saved = $this->get('happyr.translation')->createAssets($messages);
+        $uploaded = array();
+        $trans = $this->get('happyr.translation');
+        foreach ($messages as $message) {
+            if ($trans->createAsset($message)) {
+                $uploaded[] = $message;
+            }
+        }
+
+        $saved = count($uploaded);
+        if ($saved > 0) {
+            $this->get('happyr.translation.filesystem')->updateMessageCatalog($uploaded);
+        }
 
         return new Response(sprintf('%s new assets created!', $saved));
     }

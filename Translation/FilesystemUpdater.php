@@ -1,6 +1,6 @@
 <?php
 
-namespace Happyr\TranslationBundle\Service;
+namespace Happyr\TranslationBundle\Translation;
 
 use Happyr\TranslationBundle\Model\Message;
 use Symfony\Component\Translation\Dumper\DumperInterface;

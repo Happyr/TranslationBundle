@@ -27,7 +27,7 @@ services:
       - ~
 
   happyr.translation.filesystem:
-    class: Happyr\TranslationBundle\Service\FilesystemUpdater
+    class: Happyr\TranslationBundle\Translation\FilesystemUpdater
     public: false
     lazy: true
     arguments:

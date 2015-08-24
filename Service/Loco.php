@@ -5,11 +5,12 @@ namespace Happyr\TranslationBundle\Service;
 use Happyr\TranslationBundle\Exception\HttpException;
 use Happyr\TranslationBundle\Http\HttpAdapterInterface;
 use Happyr\TranslationBundle\Model\Message;
+use Happyr\TranslationBundle\Translation\FilesystemUpdater;
 
 /**
  * @author Tobias Nyholm
  */
-class Loco
+class Loco implements TranslationServiceInterface
 {
     /**
      * @var HttpAdapterInterface httpAdapter
@@ -43,27 +44,6 @@ class Loco
         $this->projects = $projects;
         $this->targetDir = $targetDir;
         $this->filesystemService = $fs;
-    }
-
-    /**
-     * @param array $messages
-     *
-     * @return int number of messages created
-     */
-    public function createAssets(array $messages)
-    {
-        $uploaded = array();
-        foreach ($messages as $message) {
-            if ($this->createAsset($message)) {
-                $uploaded[] = $message;
-            }
-        }
-
-        if (count($uploaded) > 0) {
-            $this->filesystemService->updateMessageCatalog($uploaded);
-        }
-
-        return count($uploaded);
     }
 
     /**
@@ -177,7 +157,7 @@ class Loco
      *
      * @return bool
      */
-    protected function createAsset(Message $message)
+    public function createAsset(Message $message)
     {
         $project = $this->getProject($message);
 
