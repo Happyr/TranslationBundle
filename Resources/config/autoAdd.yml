@@ -5,4 +5,4 @@ services:
     class: Happyr\TranslationBundle\Translation\AutoAdder
     arguments: [ @?translator.data_collector, @happyr.translation, @happyr.translation.filesystem ]
     tags:
-      - { name: kernel.event_listener, event: kernel.terminate, method: onTerminate }
+      - { name: kernel.event_listener, event: kernel.terminate, method: onTerminate, priority: 10 }

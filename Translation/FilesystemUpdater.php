@@ -3,6 +3,7 @@
 namespace Happyr\TranslationBundle\Translation;
 
 use Happyr\TranslationBundle\Model\Message;
+use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Translation\Dumper\DumperInterface;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -32,6 +33,11 @@ class FilesystemUpdater
     private $targetDir;
 
     /**
+     * @var Message[] messages
+     */
+    private $messages;
+
+    /**
      * Filesystem constructor.
      *
      * @param LoaderInterface $loader
@@ -43,6 +49,7 @@ class FilesystemUpdater
         $this->loader = $loader;
         $this->dumper = $dumper;
         $this->targetDir = $targetDir;
+        $this->messages = array();
     }
 
     /**
@@ -52,9 +59,26 @@ class FilesystemUpdater
      */
     public function updateMessageCatalog(array $messages)
     {
+        $this->messages = array_merge($messages, $this->messages);
+    }
+
+    /**
+     * Update the file system after the Response has been sent back to the client
+     *
+     * @param Event $event
+     *
+     * @throws \ErrorException
+     * @throws \Exception
+     */
+    public function onTerminate(Event $event)
+    {
+        if (empty($this->messages)) {
+            return;
+        }
+
         /** @var MessageCatalogue[] $catalogues */
         $catalogues = array();
-        foreach ($messages as $m) {
+        foreach ($this->messages as $m) {
             $key = $m->getLocale().$m->getDomain();
             if (!isset($catalogues[$key])) {
                 $file = sprintf('%s/%s.%s.%s', $this->targetDir, $m->getDomain(), $m->getLocale(), self::FILE_EXTENSION);
