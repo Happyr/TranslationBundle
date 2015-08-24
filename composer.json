@@ -1,7 +1,7 @@
 {
-    "name": "happyr/loco-bundle",
+    "name": "happyr/translation-bundle",
     "type": "symfony-bundle",
-    "description": "Integrate with http://localise.biz",
+    "description": "Integrate Symfony with translations SaaS like http://localise.biz",
     "keywords": [],
     "homepage": "http://developer.happyr.com",
     "license": "MIT",
@@ -19,9 +19,9 @@
     },
     "autoload": {
         "psr-0": {
-            "Happyr\\LocoBundle\\": ""
+            "Happyr\\TranslationBundle\\": ""
         }
     },
-    "target-dir": "Happyr/LocoBundle"
+    "target-dir": "Happyr/TranslationBundle"
 }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Happyr\LocoBundle\Translation;
+namespace Happyr\TranslationBundle\Translation;
 
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\Exception\InvalidResourceException;

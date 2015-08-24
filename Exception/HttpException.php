@@ -1,6 +1,6 @@
 <?php
 
-namespace Happyr\LocoBundle\Exception;
+namespace Happyr\TranslationBundle\Exception;
 
 /**
  * @author Tobias Nyholm

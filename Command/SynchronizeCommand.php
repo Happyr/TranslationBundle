@@ -1,6 +1,6 @@
 <?php
 
-namespace Happyr\LocoBundle\Command;
+namespace Happyr\TranslationBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,15 +18,15 @@ class SynchronizeCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('translation:loco:sync')
-            ->setDescription('Sync all your translations with Loco. Leave place holders for missing translations.');
+            ->setName('happyr:translation:sync')
+            ->setDescription('Sync all your translations with SaaS. Leave place holders for missing translations.');
     }
     /**
      * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getContainer()->get('happyr.loco')->synchronizeAllTranslations();
+        $this->getContainer()->get('happyr.translation')->synchronizeAllTranslations();
         $output->writeln('Synchronization complete');
     }
 }

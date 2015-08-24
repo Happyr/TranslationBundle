@@ -1,4 +1,4 @@
-# Happyr Loco Bundle
+# Happyr Translation Bundle
 
 This bundle helps you to integrate with the Loco translation service. The key features of this bundle is: 
 
@@ -11,7 +11,7 @@ This bundle helps you to integrate with the Loco translation service. The key fe
 
 To download all translations form logo, simply run: 
 ``` bash
-php app/console translation:loco:download
+php app/console happyr:translation:download
 ```
 
 When you have added new translations you may submit these to Loco by the WebProfiler toolbar.
@@ -26,19 +26,19 @@ When you want to fetch new translations from Loco you should run the synchronize
 keep your current placeholders from missing translations. 
 
 ``` bash
-php app/console translation:loco:sync
+php app/console happyr:translation:sync
 ```
 
 ## Install
 
-Install the bundle with `composer require happyr/loco-bundle`
+Install the bundle with `composer require happyr/translation-bundle`
 
 ## Configure
 
 If you have one Loco project per domain you may configure the bundle like this: 
 ``` yaml
 # /app/config/config.yml
-happyr_loco:
+happyr_translation:
   locales: ['en','sv','fr','es']
   projects:
     messages:
@@ -53,7 +53,7 @@ If you just doing one project and have tags for all your translation domains you
 ``` yaml
 
 # /app/config/config.yml
-happyr_loco:
+happyr_translation:
   locales: ['en','sv','fr','es']
   dimensions: ['messages', 'navigation']
   projects:
@@ -65,8 +65,8 @@ happyr_loco:
 You do also need to configure a development route. 
 ``` yaml
 # /app/config/routing_dev.yml
-_happyr_loco:
-    resource: '@HappyrLocoBundle/Resources/config/routing_dev.yml'
+_happyr_translation:
+    resource: '@HappyrTranslationBundle/Resources/config/routing_dev.yml'
     
 ```
 

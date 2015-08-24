@@ -1,6 +1,6 @@
 <?php
 
-namespace Happyr\LocoBundle\DependencyInjection;
+namespace Happyr\TranslationBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -16,7 +16,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $root = $treeBuilder->root('happyr_loco');
+        $root = $treeBuilder->root('happyr_translation');
 
         $root->children()
             ->scalarNode('target_dir')->defaultValue('%kernel.root_dir%/Resources/translations')->end()

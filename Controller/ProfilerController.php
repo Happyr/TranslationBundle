@@ -1,8 +1,8 @@
 <?php
 
-namespace Happyr\LocoBundle\Controller;
+namespace Happyr\TranslationBundle\Controller;
 
-use Happyr\LocoBundle\Model\Message;
+use Happyr\TranslationBundle\Model\Message;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -29,12 +29,12 @@ class ProfilerController extends Controller
         }
 
         $message = $this->getMessage($request, $token);
-        $loco = $this->get('happyr.loco');
+        $trans = $this->get('happyr.translation');
 
         if ($request->isMethod('GET')) {
-            $loco->fetchTranslation($message);
+            $trans->fetchTranslation($message);
 
-            return $this->render('HappyrLocoBundle:Profiler:edit.html.twig', [
+            return $this->render('HappyrTranslationBundle:Profiler:edit.html.twig', [
                 'message' => $message,
                 'key' => $request->query->get('message_id'),
             ]);
@@ -42,7 +42,7 @@ class ProfilerController extends Controller
 
         //Assert: This is a POST request
         $message->setTranslation($request->request->get('translation'));
-        $loco->updateTranslation($message);
+        $trans->updateTranslation($message);
 
         return new Response($message->getTranslation());
     }
@@ -64,7 +64,7 @@ class ProfilerController extends Controller
 
         $message = $this->getMessage($request, $token);
 
-        $saved = $this->get('happyr.loco')->flagTranslation($message);
+        $saved = $this->get('happyr.translation')->flagTranslation($message);
 
         return new Response($saved ? 'OK' : 'ERROR');
     }
@@ -85,7 +85,7 @@ class ProfilerController extends Controller
         }
 
         $message = $this->getMessage($request, $token);
-        $translation = $this->get('happyr.loco')->fetchTranslation($message, true);
+        $translation = $this->get('happyr.translation')->fetchTranslation($message, true);
 
         if ($translation !== null) {
             return new Response($translation);
@@ -118,7 +118,7 @@ class ProfilerController extends Controller
             return new Response('No translations selected.');
         }
 
-        $saved = $this->get('happyr.loco')->createAssets($messages);
+        $saved = $this->get('happyr.translation')->createAssets($messages);
 
         return new Response(sprintf('%s new assets created!', $saved));
     }

@@ -1,8 +1,8 @@
 <?php
 
-namespace Happyr\LocoBundle\Service;
+namespace Happyr\TranslationBundle\Service;
 
-use Happyr\LocoBundle\Model\Message;
+use Happyr\TranslationBundle\Model\Message;
 use Symfony\Component\Translation\Dumper\DumperInterface;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;

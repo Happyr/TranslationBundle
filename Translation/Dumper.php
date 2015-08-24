@@ -1,8 +1,8 @@
 <?php
 
-namespace Happyr\LocoBundle\Translation;
+namespace Happyr\TranslationBundle\Translation;
 
-use Happyr\LocoBundle\Service\FilesystemUpdater;
+use Happyr\TranslationBundle\Service\FilesystemUpdater;
 use Symfony\Component\Translation\Dumper\FileDumper;
 use Symfony\Component\Translation\MessageCatalogue;
 

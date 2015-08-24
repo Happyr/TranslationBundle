@@ -1,13 +1,13 @@
 <?php
 
-namespace Happyr\LocoBundle\DependencyInjection;
+namespace Happyr\TranslationBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
-class HappyrLocoExtension extends Extension
+class HappyrTranslationExtension extends Extension
 {
     /**
      * @param array            $configs
@@ -29,16 +29,16 @@ class HappyrLocoExtension extends Extension
         $adapter = $config['http_adapter'];
         if ($adapter === 'guzzle5' || $adapter === 'guzzle6') {
             //Use one of our adapters
-            $adapter = 'happyr.loco.http_adapter.'.$adapter;
+            $adapter = 'happyr.translation.http_adapter.'.$adapter;
         }
-        $container->setAlias('happyr.loco.http_adapter', $adapter);
+        $container->setAlias('happyr.translation.http_adapter', $adapter);
 
         $targetDir = rtrim($config['target_dir'], '/');
-        $container->findDefinition('happyr.loco')
+        $container->findDefinition('happyr.translation')
             ->replaceArgument(2, $config['projects'])
             ->replaceArgument(3, $targetDir);
 
-        $container->findDefinition('happyr.loco.filesystem')
+        $container->findDefinition('happyr.translation.filesystem')
             ->replaceArgument(2, $targetDir);
     }
 

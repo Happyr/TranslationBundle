@@ -1,12 +1,12 @@
 <?php
 
-namespace Happyr\LocoBundle\Http;
+namespace Happyr\TranslationBundle\Http;
 
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
-use Happyr\LocoBundle\Exception\HttpException;
+use Happyr\TranslationBundle\Exception\HttpException;
 
 /**
  * @author Tobias Nyholm

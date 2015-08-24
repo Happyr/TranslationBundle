@@ -1,6 +1,6 @@
 <?php
 
-namespace Happyr\LocoBundle\Command;
+namespace Happyr\TranslationBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,15 +17,15 @@ class DownloadCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('translation:loco:download')
-            ->setDescription('Replace your local files with the latest from Loco.');
+            ->setName('happyr:translation:download')
+            ->setDescription('Replace your local files with the latest from your translation SaaS.');
     }
     /**
      * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getContainer()->get('happyr.loco')->downloadAllTranslations();
+        $this->getContainer()->get('happyr.translation')->downloadAllTranslations();
         $output->writeln('Download complete');
     }
 }

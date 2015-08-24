@@ -1,8 +1,8 @@
 <?php
 
-namespace Happyr\LocoBundle\Http;
+namespace Happyr\TranslationBundle\Http;
 
-use Happyr\LocoBundle\Exception\HttpException;
+use Happyr\TranslationBundle\Exception\HttpException;
 
 /**
  * @author Tobias Nyholm

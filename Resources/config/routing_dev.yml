@@ -1,4 +1,4 @@
 _logo_translation_profiler:
-    resource: "@HappyrLocoBundle/Controller/ProfilerController.php"
+    resource: "@HappyrTranslationBundle/Controller/ProfilerController.php"
     type:     annotation
     prefix:   /_profiler

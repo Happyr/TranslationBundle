@@ -1,6 +1,6 @@
 <?php
 
-namespace Happyr\LocoBundle\Model;
+namespace Happyr\TranslationBundle\Model;
 
 /**
  * @author Tobias Nyholm

@@ -1,10 +1,10 @@
 <?php
 
-namespace Happyr\LocoBundle\Service;
+namespace Happyr\TranslationBundle\Service;
 
-use Happyr\LocoBundle\Exception\HttpException;
-use Happyr\LocoBundle\Http\HttpAdapterInterface;
-use Happyr\LocoBundle\Model\Message;
+use Happyr\TranslationBundle\Exception\HttpException;
+use Happyr\TranslationBundle\Http\HttpAdapterInterface;
+use Happyr\TranslationBundle\Model\Message;
 
 /**
  * @author Tobias Nyholm
