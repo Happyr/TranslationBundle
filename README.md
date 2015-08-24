@@ -10,6 +10,7 @@ The key features of this bundle is:
 * Support for multiple projects
 * Create new translation assets by the Symfony WebProfiler
 * Edit, flag and synchronize the translation via the Symfony WebProfiler 
+* Auto upload missing translations to SaaS 
 
 ## Usage
 
@@ -52,7 +53,6 @@ happyr_translation:
 
 ```
 
-
 If you just doing one project and have tags for all your translation domains you may use this configuration:
 ``` yaml
 
@@ -73,6 +73,18 @@ _happyr_translation:
     resource: '@HappyrTranslationBundle/Resources/config/routing_dev.yml'
     
 ```
+
+### Default configuration
+``` yaml
+
+happyr_translation:
+  locales: []
+  dimensions: []
+  target_dir: '%kernel.root_dir%/Resources/translations'
+  auto_add_assets: false
+  http_adapter: 'guzzle5'
+```
+
 
 # TODO
 
