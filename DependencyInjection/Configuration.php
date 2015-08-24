@@ -20,6 +20,7 @@ class Configuration implements ConfigurationInterface
 
         $root->children()
             ->scalarNode('target_dir')->defaultValue('%kernel.root_dir%/Resources/translations')->end()
+            ->booleanNode('auto_add_assets')->defaultFalse()->end()
             ->arrayNode('locales')
                 ->requiresAtLeastOneElement()
                 ->prototype('scalar')->end()
