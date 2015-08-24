@@ -37,13 +37,20 @@ class HappyrTranslationExtension extends Extension
         }
         $container->setAlias('happyr.translation.http_adapter', $adapter);
 
-        $targetDir = rtrim($config['target_dir'], '/');
-        $container->findDefinition('happyr.translation')
-            ->replaceArgument(2, $config['projects'])
-            ->replaceArgument(3, $targetDir);
 
+        $targetDir = rtrim($config['target_dir'], '/');
         $container->findDefinition('happyr.translation.filesystem')
             ->replaceArgument(2, $targetDir);
+
+
+        /*
+         * Set alias for the translation service
+         */
+        $container->setAlias('happyr.translation', 'happyr.translation.service.'.$config['translation_service']);
+
+        $container->findDefinition('happyr.translation.service.loco')
+            ->replaceArgument(2, $config['projects'])
+            ->replaceArgument(3, $targetDir);
     }
 
     /**

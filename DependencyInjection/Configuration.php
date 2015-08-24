@@ -19,8 +19,10 @@ class Configuration implements ConfigurationInterface
         $root = $treeBuilder->root('happyr_translation');
 
         $root->children()
+            ->enumNode('translation_service')->values(array('loco', 'foobar'))->defaultValue('loco')->end()
             ->scalarNode('target_dir')->defaultValue('%kernel.root_dir%/Resources/translations')->end()
             ->booleanNode('auto_add_assets')->defaultFalse()->end()
+            ->scalarNode('http_adapter')->defaultValue('guzzle5')->end()
             ->arrayNode('locales')
                 ->requiresAtLeastOneElement()
                 ->prototype('scalar')->end()
@@ -29,7 +31,6 @@ class Configuration implements ConfigurationInterface
                 ->requiresAtLeastOneElement()
                 ->prototype('scalar')->end()
             ->end()
-            ->scalarNode('http_adapter')->defaultValue('guzzle5')->end()
             ->append($this->getProjectNode())
         ->end();
 

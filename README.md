@@ -80,6 +80,7 @@ _happyr_translation:
 happyr_translation:
   locales: []
   dimensions: []
+  translation_service: 'loco'
   target_dir: '%kernel.root_dir%/Resources/translations'
   auto_add_assets: false
   http_adapter: 'guzzle5'

@@ -18,7 +18,7 @@ services:
     tags:
       - { name: 'data_collector', template: "@HappyrTranslation/Profiler/translation", id: "translation", priority: 200 }
 
-  happyr.translation:
+  happyr.translation.service.loco:
     class: Happyr\TranslationBundle\Service\Loco
     arguments:
       - @happyr.translation.http_adapter
