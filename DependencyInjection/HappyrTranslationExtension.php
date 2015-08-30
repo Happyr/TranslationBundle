@@ -27,6 +27,8 @@ class HappyrTranslationExtension extends Extension
             $loader->load('autoAdd.yml');
         }
 
+        $container->setParameter('translation.toolbar.allow_edit', $config['allow_edit']);
+
         /*
          * Set an alias for the adapter
          */

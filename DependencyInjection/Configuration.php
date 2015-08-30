@@ -22,6 +22,7 @@ class Configuration implements ConfigurationInterface
             ->enumNode('translation_service')->values(array('loco', 'foobar'))->defaultValue('loco')->end()
             ->scalarNode('target_dir')->defaultValue('%kernel.root_dir%/Resources/translations')->end()
             ->booleanNode('auto_add_assets')->defaultFalse()->end()
+            ->booleanNode('allow_edit')->defaultTrue()->end()
             ->scalarNode('http_adapter')->defaultValue('guzzle5')->end()
             ->arrayNode('locales')
                 ->requiresAtLeastOneElement()

@@ -24,6 +24,10 @@ class ProfilerController extends Controller
      */
     public function editAction(Request $request, $token)
     {
+        if (!$this->getParameter('translation.toolbar.allow_edit')) {
+            return new Response('You are not allowed to edit the translations.');
+        }
+
         if (!$request->isXmlHttpRequest()) {
             return $this->redirectToRoute('_profiler', ['token' => $token]);
         }
