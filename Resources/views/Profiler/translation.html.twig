@@ -60,7 +60,7 @@
                     </code></td>
                 <td><code>{{ message.locale }}</code></td>
                 <td><code>{{ message.domain }}</code></td>
-                <td style="word-break: break-all; max-width:25%">
+                <td style="word-break: break-all; max-width:25%; min-width: 200px;">
                     <code>{{ message.id }}</code>
                     {% if message.count > 1 %}<br><small style="color: gray;">(used {{ message.count }} times)</small>{% endif %}
 
@@ -87,7 +87,7 @@
                         {% endif %}
                     {% endif %}
                 </td>
-                <td><code class="translation">{{ message.translation }}</code></td>
+                <td style="word-break: break-all; max-width:50%; min-width:200px;"><code class="translation">{{ message.translation }}</code></td>
                 <td><a class="flag" href="javascript:void(0);" onclick='flagMessage("{{ key }}")'>Flag</a><br />
                     <a class="sync"  href="javascript:void(0);" onclick='syncMessage("{{ key }}")'>Sync</a><br />
                     <a class="edit"  href="javascript:void(0);" onclick='getEditForm("{{ key }}")'>Edit</a>
