@@ -40,13 +40,17 @@
         {% for key, message in collector.messages %}
             <tr id="{{ key }}">
                 <td>
-                    {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_MISSING') or message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_EQUALS_FALLBACK') %}
+                    {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_MISSING') %}
                         <input type="checkbox" name="translationKey" value="{{ key }}" checked="checked">
                     {% else %}
                         <input type="checkbox" disabled>
                     {% endif %}
                 </td>
-                <td><code class="state">{{ translator.state(message) }}</code></td>
+                <td><code class="state">{{ translator.state(message) }}
+                    {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_EQUALS_FALLBACK') %}
+                        Edit to add translation
+                    {% endif %}
+                    </code></td>
                 <td><code>{{ message.locale }}</code></td>
                 <td><code>{{ message.domain }}</code></td>
                 <td>

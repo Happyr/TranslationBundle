@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\DataCollectorTranslator;
+use Symfony\Component\Translation\Tests\DataCollector\TranslationDataCollectorTest;
 
 /**
  * @author Tobias Nyholm
@@ -157,6 +159,11 @@ class ProfilerController extends Controller
             throw $this->createNotFoundException(sprintf('No message with key "%s" was found.', $messageId));
         }
         $message = new Message($messages[$messageId]);
+
+        if ($message->getState() === DataCollectorTranslator::MESSAGE_EQUALS_FALLBACK) {
+            $message->setLocale($profile->getCollector('request')->getLocale())
+                ->setTranslation(sprintf('[%s]', $message->getTranslation()));
+        }
 
         return $message;
     }

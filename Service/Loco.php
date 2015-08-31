@@ -294,12 +294,7 @@ class Loco implements TranslationServiceInterface
      */
     protected function doSynchronizeDomain(array &$config, $domain, $useDomainAsFilter)
     {
-        $query = array(
-            'key' => $config['api_key'],
-            // 'Zend' will give us a flat array
-            'format' => 'zend',
-            'index' => 'id',
-        );
+        $query = $this->getExportQueryParams($config['api_key']);
 
         if ($useDomainAsFilter) {
             $query['filter'] = $domain;
@@ -343,12 +338,7 @@ class Loco implements TranslationServiceInterface
      */
     protected function getUrls(array &$data, array &$config, $domain, $useDomainAsFilter)
     {
-        $query = array(
-            'key' => $config['api_key'],
-            // 'Zend' will give us a flat array
-            'format' => 'zend',
-            'index' => 'id',
-        );
+        $query = $this->getExportQueryParams($config['api_key']);
 
         if ($useDomainAsFilter) {
             $query['filter'] = $domain;
@@ -361,5 +351,21 @@ class Loco implements TranslationServiceInterface
 
             $data[$url] = $path;
         }
+    }
+
+    /**
+     * @param array $config
+     *
+     * @return array
+     */
+    private function getExportQueryParams($apiKey)
+    {
+        return array(
+            'key' => $apiKey,
+            // 'Zend' will give us a flat array
+            'format' => 'zend',
+            'index' => 'id',
+            'status' => 'translated',
+        );
     }
 }
