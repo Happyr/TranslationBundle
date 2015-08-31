@@ -65,6 +65,22 @@
                 { method: 'POST' }
         );
     }
+    function syncAll() {
+        Sfjs.request(
+                "{{ path('_profiler_translations_sync_all', {'token': token}) }}",
+                function(xhr) {
+                    // Success
+                    var el = document.getElementById("top-result-area");
+                    el.innerHTML = xhr.responseText;
+                },
+                function(xhr) {
+                    // Error
+                    console.log("Syncing message "+key + " - Error");
+                },
+                {},
+                { method: 'POST' }
+        );
+    }
 
     function getEditForm(key) {
 

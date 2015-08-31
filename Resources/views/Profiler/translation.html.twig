@@ -7,15 +7,16 @@
 {% import _self as translator %}
 {% block panelContent %}
     <h2>Translation Stats</h2>
-    <table>
+    <div style="float:left">
+    <table style="max-width:300px; margin:0;">
         <tbody>
         <tr>
             <th>Defined messages</th>
             <td><pre>{{ collector.countdefines }}</pre></td>
         </tr>
         <tr>
-            <th scope="col" style="width: 30%">Fallback messages</th>
-            <td scope="col" style="width: 60%"><pre>{{ collector.countFallbacks }}</pre></td>
+            <th scope="col" style="">Fallback messages</th>
+            <td scope="col" style=""><pre>{{ collector.countFallbacks }}</pre></td>
         </tr>
         <tr>
             <th>Missing messages</th>
@@ -23,6 +24,12 @@
         </tr>
         </tbody>
     </table>
+    </div>
+    <div style="float:left; margin-left: 20px;">
+        <a class="button" href="javascript:void(0);" onclick='syncAll()'>Synchronize all translations</a><br />
+        <div id="top-result-area"></div>
+    </div>
+<div style="clear:left"></div>
 
 <form action="{{ path('_profiler_translations_create_assets', {'token': token}) }}" method="post"
       id="translations-list" onSubmit="return saveTranslations(this);" >
@@ -53,7 +60,7 @@
                     </code></td>
                 <td><code>{{ message.locale }}</code></td>
                 <td><code>{{ message.domain }}</code></td>
-                <td>
+                <td style="word-break: break-all; max-width:25%">
                     <code>{{ message.id }}</code>
                     {% if message.count > 1 %}<br><small style="color: gray;">(used {{ message.count }} times)</small>{% endif %}
 

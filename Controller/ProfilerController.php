@@ -101,6 +101,25 @@ class ProfilerController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param         $token
+     *
+     * @Route("/{token}/translation/sync-all", name="_profiler_translations_sync_all")
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+    public function syncAllAction(Request $request, $token)
+    {
+        if (!$request->isXmlHttpRequest()) {
+            return $this->redirectToRoute('_profiler', ['token' => $token]);
+        }
+
+        $this->get('happyr.translation')->synchronizeAllTranslations();
+
+        return new Response('Started synchronization of all translations');
+    }
+
+    /**
      * Save the selected translation to resources.
      *
      * @author Damien Alexandre (damienalexandre)
