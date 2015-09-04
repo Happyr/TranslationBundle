@@ -36,6 +36,9 @@ class Guzzle6Adapter implements HttpAdapterInterface
      */
     public function downloadFiles(array $data)
     {
+        trigger_error('Not yet implemented', E_USER_WARNING);
+        return;
+
         $client = new Client();
 
         $requests = array();
