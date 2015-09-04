@@ -49,32 +49,35 @@ class Loco implements TranslationServiceInterface
     /**
      * Make an API call. Use this function if you want more freedom an call the Loco API with whatever you want.
      *
-     * @param string       $projectName
-     * @param string       $method
-     * @param string       $url
-     * @param array  $query
-     * @param string $body
+     * @param string $projectName The name of the project that you have configured it in Symfony
+     * @param string $method      The HTTP method
+     * @param string $url         The url after "https://localise.biz/api/"
+     * @param array  $query       any query parameters. The "key" parameter will be added automatically
+     * @param mixed  $data        This is the body of the request
+     * @param array  $options     Other Guzzle options
      *
      * @return array
      */
-    public function api($projectName, $method, $url, array $query = array(), $body = null)
+    public function api($projectName, $method, $url, array $query = array(), $data = null, array $options = array())
     {
         if (!isset($this->projects[$projectName])) {
             throw new \InvalidArgumentException(sprintf(
                 'Could not find project with name %s. Valid names are: %s',
                 $projectName,
-                implode(", ", array_keys($this->projects))
+                implode(', ', array_keys($this->projects))
             ));
         }
         $project = $this->projects[$projectName];
 
+        $options['query'] = array_merge(['key' => $project['api_key']], $query);
+        if ($data) {
+            $options['body'] = $data;
+        }
+
         return $this->httpAdapter->send(
             $method,
             $url,
-            [
-                'query' => array_merge(['key' => $project['api_key']], $query),
-                'body'=>$body
-            ]
+            $options
         );
     }
 
