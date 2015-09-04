@@ -47,6 +47,38 @@ class Loco implements TranslationServiceInterface
     }
 
     /**
+     * Make an API call. Use this function if you want more freedom an call the Loco API with whatever you want.
+     *
+     * @param string       $projectName
+     * @param string       $method
+     * @param string       $url
+     * @param array  $query
+     * @param string $body
+     *
+     * @return array
+     */
+    public function api($projectName, $method, $url, array $query = array(), $body = null)
+    {
+        if (!isset($this->projects[$projectName])) {
+            throw new \InvalidArgumentException(sprintf(
+                'Could not find project with name %s. Valid names are: %s',
+                $projectName,
+                implode(", ", array_keys($this->projects))
+            ));
+        }
+        $project = $this->projects[$projectName];
+
+        return $this->httpAdapter->send(
+            $method,
+            $url,
+            [
+                'query' => array_merge(['key' => $project['api_key']], $query),
+                'body'=>$body
+            ]
+        );
+    }
+
+    /**
      * Fetch a translation form Loco.
      *
      * @param Message $message

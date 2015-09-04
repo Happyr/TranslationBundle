@@ -18,14 +18,17 @@ class Guzzle6Adapter implements HttpAdapterInterface
      */
     public function send($method, $url, $data)
     {
-        $client = new Client(['base_url' => HttpAdapterInterface::BASE_URL]);
+        $client = new Client([
+            'base_uri' => HttpAdapterInterface::BASE_URL
+        ]);
+
         try {
-            $response = $client->send($client->createRequest($method, $url, $data));
+            $response = $client->request($method, $url, $data);
         } catch (ClientException $e) {
             throw new HttpException('Could not transfer data to Loco', $e->getCode(), $e);
         }
 
-        return $response->json();
+        return json_decode($response->getBody(), true);
     }
 
     /**
