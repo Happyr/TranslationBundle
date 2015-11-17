@@ -111,3 +111,11 @@
 
     {% include "HappyrTranslationBundle:Profiler:javascripts.html.twig" %}
 {% endblock %}
+
+{% macro state(translation) %}
+    {% if translation.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_EQUALS_FALLBACK') %}
+        same as fallback
+    {% elseif translation.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_MISSING') %}
+        missing
+    {% endif %}
+{% endmacro %}
