@@ -1,121 +1,178 @@
 {% extends '@WebProfiler/Collector/translation.html.twig' %}
 
 {#
- # Authors Tobias Nyholm, Damien Alexandre (damienalexandre)
+ # Authors Tobias Nyholm, Damien Alexandre (damienalexandre), Damien Harper
  #}
 
-{% import _self as translator %}
+{% import _self as helper %}
+
 {% block panelContent %}
-    <h2>Translation Stats</h2>
-    <div style="float:left">
-    <table style="max-width:300px; margin:0;">
-        <tbody>
-        <tr>
-            <th>Defined messages</th>
-            <td><pre>{{ collector.countdefines }}</pre></td>
-        </tr>
-        <tr>
-            <th scope="col" style="">Fallback messages</th>
-            <td scope="col" style=""><pre>{{ collector.countFallbacks }}</pre></td>
-        </tr>
-        <tr>
-            <th>Missing messages</th>
-            <td><pre>{{ collector.countMissings }}</pre></td>
-        </tr>
-        </tbody>
-    </table>
-    </div>
-    <div style="float:left; margin-left: 20px;">
-        <a class="button" href="javascript:void(0);" onclick='syncAll()'>Synchronize all translations</a><br />
+    <h2>Translation Metrics</h2>
+
+    <div>
+        <a class="btn" href="javascript:void(0);" onclick='syncAll()'>Synchronize all translations</a><br />
         <div id="top-result-area"></div>
     </div>
-<div style="clear:left"></div>
+
+    <div class="metrics">
+        <div class="metric">
+            <span class="value">{{ collector.countdefines }}</span>
+            <span class="label">Defined messages</span>
+        </div>
+
+        <div class="metric">
+            <span class="value">{{ collector.countFallbacks }}</span>
+            <span class="label">Fallback messages</span>
+        </div>
+
+        <div class="metric">
+            <span class="value">{{ collector.countMissings }}</span>
+            <span class="label">Missing messages</span>
+        </div>
+    </div>
+
+    <h2>Translation Messages</h2>
+
+    {# sort translation messages in groups #}
+    {% set messages_defined, messages_missing, messages_fallback = [], [], [] %}
+    {% for key, message in collector.messages %}
+        {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}
+            {% set messages_defined = messages_defined|merge({(key): message}) %}
+        {% elseif message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_MISSING') %}
+            {% set messages_missing = messages_missing|merge({(key): message}) %}
+        {% elseif message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_EQUALS_FALLBACK') %}
+            {% set messages_fallback = messages_fallback|merge({(key): message}) %}
+        {% endif %}
+    {% endfor %}
 
 <form action="{{ path('_profiler_translations_create_assets', {'token': token}) }}" method="post"
       id="translations-list" onSubmit="return saveTranslations(this);" >
 
-    <table>
-        <tr>
-            <th></th>
-            <th>State</th>
-            <th>Locale</th>
-            <th>Domain</th>
-            <th>Id</th>
-            <th>Message Preview</th>
-            <th width="60px">Actions</th>
-        </tr>
-        {% for key, message in collector.messages %}
-            <tr id="{{ key }}">
-                <td>
-                    {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_MISSING') %}
-                        <input type="checkbox" name="translationKey" value="{{ key }}" checked="checked">
-                    {% else %}
-                        <input type="checkbox" disabled>
-                    {% endif %}
-                </td>
-                <td><code class="state">{{ translator.state(message) }}
-                    {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_EQUALS_FALLBACK') %}
-                        Edit to add translation
-                    {% endif %}
-                    </code></td>
-                <td><code>{{ message.locale }}</code></td>
-                <td><code>{{ message.domain }}</code></td>
-                <td style="word-break: break-all; max-width:25%; min-width: 200px;">
-                    <code>{{ message.id }}</code>
-                    {% if message.count > 1 %}<br><small style="color: gray;">(used {{ message.count }} times)</small>{% endif %}
+    <div class="sf-tabs">
+        <div class="tab">
+            <h3 class="tab-title">Defined <span class="badge">{{ messages_defined|length }}</span></h3>
 
-                    {# if symfony 2.8 #}
-                    {% if message.parameters is defined %}
-                        {% if message.transChoiceNumber is not null %}<br><small style="color: gray;">(use pluralization)</small>{% endif %}
+            <div class="tab-content">
+                <p class="help">
+                    These messages are correctly translated into the given locale.
+                </p>
 
-                        {% if message.parameters|length > 0 %}
-                            <div>
-                                [<a href="#" onclick="return openParameters(this);" style="text-decoration: none;"
-                                    title="Toggle parameters display" data-target-id="parameters-{{ loop.index }}" >
-                                    <img alt="+" src="data:image/gif;base64,R0lGODlhEgASAMQTANft99/v+Ga44bHb8ITG52S44dXs9+z1+uPx+YvK6WC24G+944/M6W28443L6dnu+Ge54v/+/l614P///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABMALAAAAAASABIAQAVS4DQBTiOd6LkwgJgeUSzHSDoNaZ4PU6FLgYBA5/vFID/DbylRGiNIZu74I0h1hNsVxbNuUV4d9SsZM2EzWe1qThVzwWFOAFCQFa1RQq6DJB4iIQA7" style="display: inline; width: 12px; height: 12px;" />
-                                    <img alt="-" src="data:image/gif;base64,R0lGODlhEgASAMQSANft94TG57Hb8GS44ez1+mC24IvK6ePx+Wa44dXs92+942e54o3L6W2844/M6dnu+P/+/l614P///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAASABIAQAVCoCQBTBOd6Kk4gJhGBCTPxysJb44K0qD/ER/wlxjmisZkMqBEBW5NHrMZmVKvv9hMVsO+hE0EoNAstEYGxG9heIhCADs=" style="display: none; width: 12px; height: 12px;" />
-                                    <span style="vertical-align:top">Parameters</span>
-                                </a>]
+                {% if messages_defined is empty %}
+                    <div class="empty">
+                        <p>None of the used translation messages are defined for the given locale.</p>
+                    </div>
+                {% else %}
+                    {{ helper.render_table(messages_defined) }}
+                {% endif %}
+            </div>
+        </div>
 
-                                <div id="parameters-{{ loop.index }}" style="display: none;">
-                                    {% for parameters in message.parameters %}
-                                        {{ profiler_dump(parameters) }}
-                                        {% if not loop.last %}<br />{% endif %}
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        {% endif %}
-                    {% endif %}
-                </td>
-                <td style="word-break: break-all; max-width:50%; min-width:200px;"><code class="translation">{{ message.translation }}</code></td>
-                <td><a class="flag" href="javascript:void(0);" onclick='flagMessage("{{ key }}")'>Flag</a><br />
-                    <a class="sync"  href="javascript:void(0);" onclick='syncMessage("{{ key }}")'>Sync</a><br />
-                    <a class="edit"  href="javascript:void(0);" onclick='getEditForm("{{ key }}")'>Edit</a>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
+        <div class="tab">
+            <h3 class="tab-title">Fallback <span class="badge">{{ messages_fallback|length }}</span></h3>
 
+            <div class="tab-content">
+                <p class="help">
+                    These messages are not available for the given locale
+                    but Symfony found them in the fallback locale catalog.
+                </p>
 
-    <button type="submit" class="sf-button">
-            <span class="border-l">
-                <span class="border-r">
-                    <span class="btn-bg">Send selected translations to Loco</span>
-                </span>
-            </span>
+                {% if messages_fallback is empty %}
+                    <div class="empty">
+                        <p>No fallback translation messages were used.</p>
+                    </div>
+                {% else %}
+                    {{ helper.render_table(messages_fallback) }}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="tab">
+            <h3 class="tab-title">Missing <span class="badge">{{ messages_missing|length }}</span></h3>
+
+            <div class="tab-content">
+                <p class="help">
+                    These messages are not available for the given locale and cannot
+                    be found in the fallback locales. Add them to the translation
+                    catalogue to avoid Symfony outputting untranslated contents.
+                </p>
+
+                {% if messages_missing is empty %}
+                    <div class="empty">
+                        <p>There are no messages of this category.</p>
+                    </div>
+                {% else %}
+                    {{ _self.render_table(messages_missing) }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn">
+        Send selected translations to SaaS
     </button>
 
     <div id="translationResult"></div>
 
 </form>
-
     {% include "HappyrTranslationBundle:Profiler:javascripts.html.twig" %}
 {% endblock %}
 
-{% macro state(translation) %}
-    {% if translation.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_EQUALS_FALLBACK') %}
-        same as fallback
-    {% elseif translation.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_MISSING') %}
-        missing
-    {% endif %}
+{% macro render_table(messages) %}
+    <table>
+        <thead>
+        <tr>
+            <th></th>
+            <th>Locale</th>
+            <th>Domain</th>
+            <th>Times used</th>
+            <th>Message ID</th>
+            <th>Message Preview</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for key, message in messages %}
+            <tr id="{{ key }}">
+                <td>
+                    {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_MISSING') %}
+                        <input type="checkbox" name="translationKey" value="{{ key }}" checked="checked">
+                    {% else %}
+                        <input type="checkbox" disabled="disabled">
+                    {% endif %}
+                </td>
+                <td class="font-normal text-small">{{ message.locale }}</td>
+                <td class="font-normal text-small text-bold">{{ message.domain }}</td>
+                <td class="font-normal text-small">{{ message.count }}</td>
+                <td>
+                    {{ message.id }}
+
+                    {% if message.transChoiceNumber is not null %}
+                        <small class="newline">(pluralization is used)</small>
+                    {% endif %}
+
+                    {% if message.parameters|length > 0 %}
+                        <button class="btn-link newline text-small sf-toggle" data-toggle-selector="#parameters-{{ loop.index }}" data-toggle-alt-content="Hide parameters">Show parameters</button>
+
+                        <div id="parameters-{{ loop.index }}" class="hidden">
+                            {% for parameters in message.parameters %}
+                                {{ profiler_dump(parameters) }}
+                                {% if not loop.last %}<br />{% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </td>
+                <td class="translation">{{ message.translation }}</td>
+                <td width="150px">
+                    {% spaceless %}
+                    <a class="edit"  href="javascript:void(0);" onclick='getEditForm("{{ key }}")'>Edit</a>
+                        |
+                    <a class="flag" href="javascript:void(0);" onclick='flagMessage("{{ key }}")'>Flag</a>
+                        |
+                    <a class="sync"  href="javascript:void(0);" onclick='syncMessage("{{ key }}")'>Sync</a>
+                    {% endspaceless %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endmacro %}
