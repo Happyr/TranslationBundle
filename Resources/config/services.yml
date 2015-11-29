@@ -14,23 +14,23 @@ services:
   # Custom data_collector to use our own template
   happyr.translation.data_collector:
     class: Symfony\Component\Translation\DataCollector\TranslationDataCollector
-    arguments: [ @?translator.data_collector ]
+    arguments: [ '@?translator.data_collector' ]
     tags:
       - { name: 'data_collector', template: "@HappyrTranslation/Profiler/translation", id: "translation", priority: 200 }
 
   happyr.translation.service.loco:
     class: Happyr\TranslationBundle\Service\Loco
     arguments:
-      - @happyr.translation.http_adapter
-      - @happyr.translation.filesystem
+      - '@happyr.translation.http_adapter'
+      - '@happyr.translation.filesystem'
       - ~
       - ~
 
   happyr.translation.filesystem:
     class: Happyr\TranslationBundle\Translation\FilesystemUpdater
     arguments:
-      - @happyr.translation.loader
-      - @happyr.translation.dumper
+      - '@happyr.translation.loader'
+      - '@happyr.translation.dumper'
       - ~
     tags:
       - { name: kernel.event_listener, event: kernel.terminate, method: onTerminate, priority: -20 }
