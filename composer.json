@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=5.4",
-        "symfony/symfony":"~2.7",
+        "symfony/symfony":"~2.7|~3.0",
         "sensio/framework-extra-bundle": "^3.0.7",
         "guzzlehttp/guzzle": "~5.3|~6.0"
     },
