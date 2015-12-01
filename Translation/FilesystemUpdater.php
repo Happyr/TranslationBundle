@@ -48,7 +48,7 @@ class FilesystemUpdater
      * @param                 $targetDir
      * @param                 $fileType
      */
-    public function __construct(LoaderInterface $loader, DumperInterface $dumper, $targetDir, $fileType)
+    public function __construct(LoaderInterface $loader, DumperInterface $dumper, $targetDir, $fileType = 'xlf')
     {
         $this->loader = $loader;
         $this->dumper = $dumper;

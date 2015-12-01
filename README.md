@@ -97,6 +97,17 @@ services:
     class: Symfony\Component\Translation\Dumper\XliffFileDumper
     tags:
       - { name: 'translation.dumper', alias: 'xliff' }
+
+  happyr.translation.filesystem:
+    class: Happyr\TranslationBundle\Translation\FilesystemUpdater
+    arguments:
+      - '@happyr.translation.loader'
+      - '@happyr.translation.dumper'
+      - ~
+      - 'xlf'
+    tags:
+      - { name: kernel.event_listener, event: kernel.terminate, method: onTerminate, priority: -20 }
+      - { name: kernel.event_listener, event: console.terminate, method: onTerminate, priority: -20 }
 ```
 
 Loader and Dumper for PHP resources
@@ -118,6 +129,17 @@ services:
     class: Symfony\Component\Translation\Dumper\PhpFileDumper
     tags:
       - { name: 'translation.dumper', alias: 'php' }
+
+  happyr.translation.filesystem:
+    class: Happyr\TranslationBundle\Translation\FilesystemUpdater
+    arguments:
+      - '@happyr.translation.loader'
+      - '@happyr.translation.dumper'
+      - ~
+      - 'php'
+    tags:
+      - { name: kernel.event_listener, event: kernel.terminate, method: onTerminate, priority: -20 }
+      - { name: kernel.event_listener, event: console.terminate, method: onTerminate, priority: -20 }
 ```
 
 If composer installs guzzle 6+ please mind the following configuration:
