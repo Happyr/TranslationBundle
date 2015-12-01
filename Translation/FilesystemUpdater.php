@@ -46,6 +46,7 @@ class FilesystemUpdater
      * @param LoaderInterface $loader
      * @param DumperInterface $dumper
      * @param                 $targetDir
+     * @param                 $fileType
      */
     public function __construct(LoaderInterface $loader, DumperInterface $dumper, $targetDir, $fileType)
     {
