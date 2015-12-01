@@ -23,11 +23,6 @@ class Loco implements TranslationServiceInterface
     private $projects;
 
     /**
-     * @var string targetDir
-     */
-    private $targetDir;
-
-    /**
      * @var FilesystemUpdater filesystemService
      */
     private $filesystemService;
@@ -36,13 +31,11 @@ class Loco implements TranslationServiceInterface
      * @param HttpAdapterInterface $httpAdapter
      * @param FilesystemUpdater    $fs
      * @param array                $projects
-     * @param string               $targetDir
      */
-    public function __construct(HttpAdapterInterface $httpAdapter, FilesystemUpdater $fs, array $projects, $targetDir)
+    public function __construct(HttpAdapterInterface $httpAdapter, FilesystemUpdater $fs, array $projects)
     {
         $this->httpAdapter = $httpAdapter;
         $this->projects = $projects;
-        $this->targetDir = $targetDir;
         $this->filesystemService = $fs;
     }
 
@@ -288,8 +281,8 @@ class Loco implements TranslationServiceInterface
      */
     public function downloadAllTranslations()
     {
-        if (!is_dir($this->targetDir)) {
-            mkdir($this->targetDir, 0777, true);
+        if (!is_dir($this->filesystemService->getTargetDir())) {
+            mkdir($this->filesystemService->getTargetDir(), 0777, true);
         }
 
         $data = [];
@@ -349,6 +342,8 @@ class Loco implements TranslationServiceInterface
                 throw $e;
             }
 
+            $this->flatten($response);
+
             $messages = array();
             foreach ($response as $id => $translation) {
                 $messages[] = new Message([
@@ -362,6 +357,38 @@ class Loco implements TranslationServiceInterface
             }
 
             $this->filesystemService->updateMessageCatalog($messages);
+        }
+    }
+
+    /**
+     * Flattens an nested array of translations.
+     *
+     * The scheme used is:
+     *   'key' => array('key2' => array('key3' => 'value'))
+     * Becomes:
+     *   'key.key2.key3' => 'value'
+     *
+     * This function takes an array by reference and will modify it
+     *
+     * @param array  &$messages The array that will be flattened
+     * @param array  $subnode   Current subnode being parsed, used internally for recursive calls
+     * @param string $path      Current path being parsed, used internally for recursive calls
+     */
+    private function flatten(array &$messages, array $subnode = null, $path = null)
+    {
+        if (null === $subnode) {
+            $subnode = &$messages;
+        }
+        foreach ($subnode as $key => $value) {
+            if (is_array($value)) {
+                $nodePath = $path ? $path.'.'.$key : $key;
+                $this->flatten($messages, $value, $nodePath);
+                if (null === $path) {
+                    unset($messages[$key]);
+                }
+            } elseif (null !== $path) {
+                $messages[$path.'.'.$key] = $value;
+            }
         }
     }
 
@@ -382,7 +409,7 @@ class Loco implements TranslationServiceInterface
         foreach ($config['locales'] as $locale) {
             // Build url
             $url = sprintf('export/locale/%s.%s?%s', $locale, $this->filesystemService->getFileExtension(), http_build_query($query));
-            $path = sprintf('%s/%s.%s.%s', $this->targetDir, $domain, $locale, $this->filesystemService->getFileExtension());
+            $path = sprintf('%s/%s.%s.%s', $this->filesystemService->getTargetDir(), $domain, $locale, $this->filesystemService->getFileExtension());
 
             $data[$url] = $path;
         }

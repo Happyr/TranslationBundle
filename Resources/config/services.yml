@@ -24,7 +24,6 @@ services:
       - '@happyr.translation.http_adapter'
       - '@happyr.translation.filesystem'
       - ~
-      - ~
 
   happyr.translation.filesystem:
     class: Happyr\TranslationBundle\Translation\FilesystemUpdater

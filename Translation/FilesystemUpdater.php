@@ -31,9 +31,9 @@ class FilesystemUpdater
     private $targetDir;
 
     /**
-     * @var string fileType
+     * @var string fileExtension
      */
-    private $fileType;
+    private $fileExtension;
 
     /**
      * @var Message[] messages
@@ -46,24 +46,33 @@ class FilesystemUpdater
      * @param LoaderInterface $loader
      * @param DumperInterface $dumper
      * @param                 $targetDir
-     * @param                 $fileType
+     * @param                 $fileExtension
      */
-    public function __construct(LoaderInterface $loader, DumperInterface $dumper, $targetDir, $fileType = 'xlf')
+    public function __construct(LoaderInterface $loader, DumperInterface $dumper, $targetDir, $fileExtension)
     {
         $this->loader = $loader;
         $this->dumper = $dumper;
         $this->targetDir = $targetDir;
         $this->messages = array();
-        $this->fileType = $fileType;
+        $this->fileExtension = $fileExtension;
     }
 
     /**
-     * Returns current file type.
+     * Returns translation file type.
      *
      * @return string
      */
     public function getFileExtension() {
-        return $this->fileType;
+        return $this->fileExtension;
+    }
+
+    /**
+     * Returns translation dir.
+     *
+     * @return string
+     */
+    public function getTargetDir() {
+        return $this->targetDir;
     }
 
     /**
