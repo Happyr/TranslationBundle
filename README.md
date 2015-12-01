@@ -70,7 +70,7 @@ You do also need to configure a development route.
 ``` yaml
 # /app/config/routing_dev.yml
 _happyr_translation:
-    resource: '@HappyrTranslationBundle/Resources/config/routing_dev.yml'
+  resource: '@HappyrTranslationBundle/Resources/config/routing_dev.yml'
     
 ```
 
@@ -85,6 +85,7 @@ happyr_translation:
 ``` yaml
 
 happyr_translation:
+  file_extension: 'xlf'
   locales: []
   dimensions: []
   translation_service: 'loco'
@@ -92,6 +93,44 @@ happyr_translation:
   auto_add_assets: false
   allow_edit: true
   http_adapter: 'guzzle5'
+```
+
+You can choose local translation storage file type by changing the file_extension value in your config.yml.
+As of now, PHP (php) and XLIFF (xlf) are supported (xlf is the default value).
+If you choose another file type, you have to choose the appropriate Loader and Dumper in your service.yml.
+
+Loader and Dumper for XLIFF resources (default)
+``` yaml
+
+services:
+  # XLIFF Loader
+  happyr.translation.loader:
+    class: Symfony\Component\Translation\Loader\XliffFileLoader
+    tags:
+      - { name: 'translation.loader', alias: 'xliff' }
+
+  # XLIFF Dump
+  happyr.translation.dumper:
+    class: Symfony\Component\Translation\Dumper\XliffFileDumper
+    tags:
+      - { name: 'translation.dumper', alias: 'xliff' }
+```
+
+Loader and Dumper for PHP resources
+``` yaml
+
+services:
+  # PHP Loader
+  happyr.translation.loader:
+    class: Symfony\Component\Translation\Loader\PhpFileLoader
+    tags:
+      - { name: 'translation.loader', alias: 'php' }
+
+  # PHP Dumper
+  happyr.translation.dumper:
+    class: Symfony\Component\Translation\Dumper\PhpFileDumper
+    tags:
+      - { name: 'translation.dumper', alias: 'php' }
 ```
 
 

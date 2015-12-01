@@ -1,15 +1,21 @@
 parameters:
+    happyr.translation_bundle.file_extension: 'xlf'
+#    happyr.translation_bundle.file_extension: 'php'
 
 services:
   happyr.translation.loader:
-    class: Happyr\TranslationBundle\Translation\Loader
+    class: Symfony\Component\Translation\Loader\XliffFileLoader
+#    class: Symfony\Component\Translation\Loader\PhpFileLoader
     tags:
-      - { name: 'translation.loader', alias: 'phps' }
+      - { name: 'translation.loader', alias: 'xliff' }
+#      - { name: 'translation.loader', alias: 'php' }
 
   happyr.translation.dumper:
-    class: Happyr\TranslationBundle\Translation\Dumper
+    class: Symfony\Component\Translation\Dumper\XliffFileDumper
+#    class: Symfony\Component\Translation\Dumper\PhpFileDumper
     tags:
-      - { name: 'translation.dumper', alias: 'phps' }
+      - { name: 'translation.dumper', alias: 'xliff' }
+#      - { name: 'translation.dumper', alias: 'php' }
 
   # Custom data_collector to use our own template
   happyr.translation.data_collector:
@@ -31,7 +37,8 @@ services:
     arguments:
       - '@happyr.translation.loader'
       - '@happyr.translation.dumper'
-      - ~
+      - '%kernel.root_dir%/Resources/translations/'
+      - '%happyr.translation_bundle.file_extension%'
     tags:
       - { name: kernel.event_listener, event: kernel.terminate, method: onTerminate, priority: -20 }
       - { name: kernel.event_listener, event: console.terminate, method: onTerminate, priority: -20 }

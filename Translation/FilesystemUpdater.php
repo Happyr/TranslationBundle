@@ -9,14 +9,12 @@ use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
- * @author Tobias Nyholm
+ * @author Tobias Nyholm, Damien Harper
  *
  * Update the locale file system with changes in the catalogue
  */
 class FilesystemUpdater
 {
-    const FILE_EXTENSION = 'phps';
-
     /**
      * @var LoaderInterface loader
      */
@@ -33,6 +31,11 @@ class FilesystemUpdater
     private $targetDir;
 
     /**
+     * @var string fileType
+     */
+    private $fileType;
+
+    /**
      * @var Message[] messages
      */
     private $messages;
@@ -44,12 +47,22 @@ class FilesystemUpdater
      * @param DumperInterface $dumper
      * @param                 $targetDir
      */
-    public function __construct(LoaderInterface $loader, DumperInterface $dumper, $targetDir)
+    public function __construct(LoaderInterface $loader, DumperInterface $dumper, $targetDir, $fileType)
     {
         $this->loader = $loader;
         $this->dumper = $dumper;
         $this->targetDir = $targetDir;
         $this->messages = array();
+        $this->fileType = $fileType;
+    }
+
+    /**
+     * Returns current file type.
+     *
+     * @return string
+     */
+    public function getFileExtension() {
+        return $this->fileType;
     }
 
     /**
@@ -81,7 +94,7 @@ class FilesystemUpdater
         foreach ($this->messages as $m) {
             $key = $m->getLocale().$m->getDomain();
             if (!isset($catalogues[$key])) {
-                $file = sprintf('%s/%s.%s.%s', $this->targetDir, $m->getDomain(), $m->getLocale(), self::FILE_EXTENSION);
+                $file = sprintf('%s/%s.%s.%s', $this->targetDir, $m->getDomain(), $m->getLocale(), $this->getFileExtension());
                 $catalogues[$key] = $this->loader->load($file, $m->getLocale(), $m->getDomain());
             }
 
