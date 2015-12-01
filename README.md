@@ -70,8 +70,76 @@ You do also need to configure a development route.
 ``` yaml
 # /app/config/routing_dev.yml
 _happyr_translation:
-    resource: '@HappyrTranslationBundle/Resources/config/routing_dev.yml'
+  resource: '@HappyrTranslationBundle/Resources/config/routing_dev.yml'
     
+```
+
+You can choose local translation storage file type by changing the file_extension value in your config.yml.
+As of now, PHP (php) and XLIFF (xlf) are supported (xlf is the default value).
+If you choose another file type, you have to choose the appropriate Loader and Dumper in your service.yml.
+
+Loader and Dumper for XLIFF resources (default)
+``` yaml
+# /app/config/config.yml
+happyr_translation:
+  file_extension: 'xlf'
+    
+# /app/config/services.yml
+services:
+  # XLIFF Loader
+  happyr.translation.loader:
+    class: Symfony\Component\Translation\Loader\XliffFileLoader
+    tags:
+      - { name: 'translation.loader', alias: 'xliff' }
+
+  # XLIFF Dump
+  happyr.translation.dumper:
+    class: Symfony\Component\Translation\Dumper\XliffFileDumper
+    tags:
+      - { name: 'translation.dumper', alias: 'xliff' }
+
+  happyr.translation.filesystem:
+    class: Happyr\TranslationBundle\Translation\FilesystemUpdater
+    arguments:
+      - '@happyr.translation.loader'
+      - '@happyr.translation.dumper'
+      - ~
+      - 'xlf'
+    tags:
+      - { name: kernel.event_listener, event: kernel.terminate, method: onTerminate, priority: -20 }
+      - { name: kernel.event_listener, event: console.terminate, method: onTerminate, priority: -20 }
+```
+
+Loader and Dumper for PHP resources
+``` yaml
+# /app/config/config.yml
+happyr_translation:
+  file_extension: 'php'
+    
+# /app/config/services.yml
+services:
+  # PHP Loader
+  happyr.translation.loader:
+    class: Symfony\Component\Translation\Loader\PhpFileLoader
+    tags:
+      - { name: 'translation.loader', alias: 'php' }
+
+  # PHP Dumper
+  happyr.translation.dumper:
+    class: Symfony\Component\Translation\Dumper\PhpFileDumper
+    tags:
+      - { name: 'translation.dumper', alias: 'php' }
+
+  happyr.translation.filesystem:
+    class: Happyr\TranslationBundle\Translation\FilesystemUpdater
+    arguments:
+      - '@happyr.translation.loader'
+      - '@happyr.translation.dumper'
+      - ~
+      - 'php'
+    tags:
+      - { name: kernel.event_listener, event: kernel.terminate, method: onTerminate, priority: -20 }
+      - { name: kernel.event_listener, event: console.terminate, method: onTerminate, priority: -20 }
 ```
 
 If composer installs guzzle 6+ please mind the following configuration:
@@ -85,6 +153,7 @@ happyr_translation:
 ``` yaml
 
 happyr_translation:
+  file_extension: 'xlf'
   locales: []
   dimensions: []
   translation_service: 'loco'
