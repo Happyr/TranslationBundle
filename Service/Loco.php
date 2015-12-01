@@ -381,8 +381,8 @@ class Loco implements TranslationServiceInterface
 
         foreach ($config['locales'] as $locale) {
             // Build url
-            $url = sprintf('export/locale/%s.%s?%s', $locale, FilesystemUpdater::FILE_EXTENSION, http_build_query($query));
-            $path = sprintf('%s/%s.%s.%s', $this->targetDir, $domain, $locale, FilesystemUpdater::FILE_EXTENSION);
+            $url = sprintf('export/locale/%s.%s?%s', $locale, $this->filesystemService->getFileExtension(), http_build_query($query));
+            $path = sprintf('%s/%s.%s.%s', $this->targetDir, $domain, $locale, $this->filesystemService->getFileExtension());
 
             $data[$url] = $path;
         }
@@ -395,12 +395,19 @@ class Loco implements TranslationServiceInterface
      */
     private function getExportQueryParams($apiKey)
     {
-        return array(
+        $data = array(
             'key' => $apiKey,
-            // 'Zend' will give us a flat array
-            'format' => 'zend',
             'index' => 'id',
             'status' => 'translated',
         );
+        switch ($this->filesystemService->getFileExtension()) {
+            case 'php':
+                $data['format'] = 'zend'; // 'Zend' will give us a flat array
+            case 'xlf':
+            default:
+                $data['format'] = 'symfony';
+        }
+
+        return $data;
     }
 }
