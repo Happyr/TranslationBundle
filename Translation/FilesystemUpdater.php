@@ -9,14 +9,12 @@ use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
- * @author Tobias Nyholm
+ * @author Tobias Nyholm, Damien Harper
  *
  * Update the locale file system with changes in the catalogue
  */
 class FilesystemUpdater
 {
-    const FILE_EXTENSION = 'phps';
-
     /**
      * @var LoaderInterface loader
      */
@@ -33,6 +31,11 @@ class FilesystemUpdater
     private $targetDir;
 
     /**
+     * @var string fileExtension
+     */
+    private $fileExtension;
+
+    /**
      * @var Message[] messages
      */
     private $messages;
@@ -43,13 +46,33 @@ class FilesystemUpdater
      * @param LoaderInterface $loader
      * @param DumperInterface $dumper
      * @param                 $targetDir
+     * @param                 $fileExtension
      */
-    public function __construct(LoaderInterface $loader, DumperInterface $dumper, $targetDir)
+    public function __construct(LoaderInterface $loader, DumperInterface $dumper, $targetDir, $fileExtension)
     {
         $this->loader = $loader;
         $this->dumper = $dumper;
         $this->targetDir = $targetDir;
         $this->messages = array();
+        $this->fileExtension = $fileExtension;
+    }
+
+    /**
+     * Returns translation file type.
+     *
+     * @return string
+     */
+    public function getFileExtension() {
+        return $this->fileExtension;
+    }
+
+    /**
+     * Returns translation dir.
+     *
+     * @return string
+     */
+    public function getTargetDir() {
+        return $this->targetDir;
     }
 
     /**
@@ -81,7 +104,7 @@ class FilesystemUpdater
         foreach ($this->messages as $m) {
             $key = $m->getLocale().$m->getDomain();
             if (!isset($catalogues[$key])) {
-                $file = sprintf('%s/%s.%s.%s', $this->targetDir, $m->getDomain(), $m->getLocale(), self::FILE_EXTENSION);
+                $file = sprintf('%s/%s.%s.%s', $this->targetDir, $m->getDomain(), $m->getLocale(), $this->getFileExtension());
                 $catalogues[$key] = $this->loader->load($file, $m->getLocale(), $m->getDomain());
             }
 

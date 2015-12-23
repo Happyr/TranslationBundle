@@ -41,8 +41,10 @@ class HappyrTranslationExtension extends Extension
 
 
         $targetDir = rtrim($config['target_dir'], '/');
+        $fileExtension = rtrim($config['file_extension']);
         $container->findDefinition('happyr.translation.filesystem')
-            ->replaceArgument(2, $targetDir);
+            ->replaceArgument(2, $targetDir)
+            ->replaceArgument(3, $fileExtension);
 
 
         /*
@@ -51,8 +53,7 @@ class HappyrTranslationExtension extends Extension
         $container->setAlias('happyr.translation', 'happyr.translation.service.'.$config['translation_service']);
 
         $container->findDefinition('happyr.translation.service.loco')
-            ->replaceArgument(2, $config['projects'])
-            ->replaceArgument(3, $targetDir);
+            ->replaceArgument(2, $config['projects']);
     }
 
     /**
