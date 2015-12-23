@@ -80,10 +80,10 @@ class RequestManager
             $plugins = array();
 
             if ($this->logger) {
-                $plugins[]=new LoggerPlugin($this->logger);
+                $plugins[] = new LoggerPlugin($this->logger);
             }
 
-            $plugins[]=new ErrorPlugin();
+            $plugins[] = new ErrorPlugin();
 
             $this->client = new PluginClient(HttpClientDiscovery::find(), $plugins);
         }
@@ -114,6 +114,4 @@ class RequestManager
 
         return $this;
     }
-
-
 }

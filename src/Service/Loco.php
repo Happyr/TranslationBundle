@@ -47,10 +47,10 @@ class Loco implements TranslationServiceInterface
         if ($body !== null) {
             if ($type === 'form') {
                 $body = http_build_query($body);
-                $headers['Content-Type']='application/x-www-form-urlencoded';
+                $headers['Content-Type'] = 'application/x-www-form-urlencoded';
             } elseif ($type === 'json') {
                 $body = json_encode($body);
-                $headers['Content-Type']='application/json';
+                $headers['Content-Type'] = 'application/json';
             }
         }
 
@@ -278,13 +278,8 @@ class Loco implements TranslationServiceInterface
         }
 
         foreach ($config['locales'] as $locale) {
-            try {
-                $resource = sprintf('export/locale/%s.%s', $locale, 'json');
-                $this->makeApiRequest($config['api_key'], 'GET', $resource, ['query' => $query]);
-            } catch (HttpException $e) {
-                //TODO error handling
-                throw $e;
-            }
+            $resource = sprintf('export/locale/%s.%s', $locale, 'json');
+            $this->makeApiRequest($config['api_key'], 'GET', $resource, ['query' => $query]);
 
             $this->flatten($response);
 
@@ -373,6 +368,7 @@ class Loco implements TranslationServiceInterface
         switch ($this->filesystemService->getFileExtension()) {
             case 'php':
                 $data['format'] = 'zend'; // 'Zend' will give us a flat array
+                break;
             case 'xliff':
             default:
                 $data['format'] = 'symfony';
