@@ -4,7 +4,6 @@ namespace Happyr\TranslationBundle\Http;
 
 use Happyr\TranslationBundle\Exception\HttpException;
 use Happyr\TranslationBundle\Translation\FilesystemUpdater;
-use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
@@ -41,7 +40,7 @@ class RequestManager
      *
      * @throws HttpException
      */
-    public function send($method, $url, $body = null, $headers=array())
+    public function send($method, $url, $body = null, $headers = array())
     {
         $request = MessageFactoryDiscovery::find()->createRequest($method, $url, $headers, $body);
 

@@ -23,8 +23,8 @@
         "php-http/guzzle5-adapter": "dev-master"
     },
     "autoload": {
-        "psr-0": {
-            "Happyr\\TranslationBundle\\": ""
+        "psr-4": {
+            "Happyr\\TranslationBundle\\": "src/"
         }
     },
     "target-dir": "Happyr/TranslationBundle"

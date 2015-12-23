@@ -62,16 +62,17 @@ class FilesystemUpdater
      *
      * @return string
      */
-    public function getFileExtension() {
+    public function getFileExtension()
+    {
         return $this->fileExtension;
     }
 
     /**
      * @param string $fileName
-     * @param string $data the file contents
+     * @param string $data     the file contents
      */
-    public function writeToFile($fileName, $data) {
-
+    public function writeToFile($fileName, $data)
+    {
         if (!is_dir($this->targetDir)) {
             mkdir($this->targetDir, 0777, true);
         }
@@ -90,7 +91,7 @@ class FilesystemUpdater
     }
 
     /**
-     * Update the file system after the Response has been sent back to the client
+     * Update the file system after the Response has been sent back to the client.
      *
      * @param Event $event
      *
