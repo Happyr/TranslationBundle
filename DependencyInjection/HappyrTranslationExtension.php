@@ -4,6 +4,7 @@ namespace Happyr\TranslationBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
@@ -41,11 +42,12 @@ class HappyrTranslationExtension extends Extension
 
 
         $targetDir = rtrim($config['target_dir'], '/');
-        $fileExtension = rtrim($config['file_extension']);
         $container->findDefinition('happyr.translation.filesystem')
             ->replaceArgument(2, $targetDir)
-            ->replaceArgument(3, $fileExtension);
+            ->replaceArgument(3, $config['file_extension']);
 
+
+        $this->configureLoaderAndDumper($container, $config['file_extension']);
 
         /*
          * Set alias for the translation service
@@ -73,5 +75,20 @@ class HappyrTranslationExtension extends Extension
                 $project[$key] = $config[$key];
             }
         }
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param string $fileExtension
+     */
+    protected function configureLoaderAndDumper(ContainerBuilder $container, $fileExtension)
+    {
+        $loader = $container->getDefinition('happyr.translation.loader');
+        $loader->setClass(sprintf('Symfony\Component\Translation\Loader\%sFileLoader', ucfirst($fileExtension)));
+        $loader->addTag('translation.loader', ['alias'=>$fileExtension]);
+
+        $dumper = $container->getDefinition('happyr.translation.dumper');
+        $dumper->setClass(sprintf('Symfony\Component\Translation\Dumper\%sFileDumper', ucfirst($fileExtension)));
+        $dumper->addTag('translation.dumper', ['alias'=>$fileExtension]);
     }
 }
