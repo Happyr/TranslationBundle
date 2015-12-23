@@ -3,19 +3,22 @@
 namespace Happyr\TranslationBundle\Service;
 
 use Happyr\TranslationBundle\Exception\HttpException;
-use Happyr\TranslationBundle\Http\HttpAdapterInterface;
+use Happyr\TranslationBundle\Http\RequestManager;
 use Happyr\TranslationBundle\Model\Message;
 use Happyr\TranslationBundle\Translation\FilesystemUpdater;
 
 /**
- * @author Tobias Nyholm
+ *
+ * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
 class Loco implements TranslationServiceInterface
 {
+    const BASE_URL = 'https://localise.biz/api/';
+
     /**
-     * @var HttpAdapterInterface httpAdapter
+     * @var RequestManager
      */
-    private $httpAdapter;
+    private $requestManager;
 
     /**
      * @var array projects
@@ -28,50 +31,28 @@ class Loco implements TranslationServiceInterface
     private $filesystemService;
 
     /**
-     * @param HttpAdapterInterface $httpAdapter
+     * @param RequestManager $requestManager
      * @param FilesystemUpdater    $fs
      * @param array                $projects
      */
-    public function __construct(HttpAdapterInterface $httpAdapter, FilesystemUpdater $fs, array $projects)
+    public function __construct(RequestManager $requestManager, FilesystemUpdater $fs, array $projects)
     {
-        $this->httpAdapter = $httpAdapter;
+        $this->requestManager = $requestManager;
         $this->projects = $projects;
         $this->filesystemService = $fs;
     }
 
-    /**
-     * Make an API call. Use this function if you want more freedom an call the Loco API with whatever you want.
-     *
-     * @param string $projectName The name of the project that you have configured it in Symfony
-     * @param string $method      The HTTP method
-     * @param string $url         The url after "https://localise.biz/api/"
-     * @param array  $query       any query parameters. The "key" parameter will be added automatically
-     * @param mixed  $data        This is the body of the request
-     * @param array  $options     Other Guzzle options
-     *
-     * @return array
-     */
-    public function api($projectName, $method, $url, array $query = array(), $data = null, array $options = array())
+    protected function makeApiRequest($key, $method, $resource, $body = null, array $query=array())
     {
-        if (!isset($this->projects[$projectName])) {
-            throw new \InvalidArgumentException(sprintf(
-                'Could not find project with name %s. Valid names are: %s',
-                $projectName,
-                implode(', ', array_keys($this->projects))
-            ));
-        }
-        $project = $this->projects[$projectName];
-
-        $options['query'] = array_merge(['key' => $project['api_key']], $query);
-        if ($data) {
-            $options['body'] = $data;
+        if (is_array($body)) {
+            $body = json_encode($body);
         }
 
-        return $this->httpAdapter->send(
-            $method,
-            $url,
-            $options
-        );
+        $query['key']=$key;
+        $url = self::BASE_URL.$resource.http_build_query($query);
+
+
+        return $this->requestManager->send($method, $url, $body);
     }
 
     /**
@@ -84,11 +65,8 @@ class Loco implements TranslationServiceInterface
         $project = $this->getProject($message);
 
         try {
-            $response = $this->httpAdapter->send(
-                'GET',
-                sprintf('translations/%s/%s', $message->getId(), $message->getLocale()),
-                ['query' => ['key' => $project['api_key']]]
-            );
+            $resource = sprintf('translations/%s/%s', $message->getId(), $message->getLocale());
+            $response = $this->makeApiRequest($project['api_key'], 'GET', $resource);
         } catch (HttpException $e) {
             if ($e->getCode() === 404) {
                 //Message does not exist
@@ -119,14 +97,8 @@ class Loco implements TranslationServiceInterface
         $project = $this->getProject($message);
 
         try {
-            $this->httpAdapter->send(
-                'POST',
-                sprintf('translations/%s/%s', $message->getId(), $message->getLocale()),
-                [
-                    'query' => ['key' => $project['api_key']],
-                    'body' => $message->getTranslation(),
-                ]
-            );
+            $resource = sprintf('translations/%s/%s', $message->getId(), $message->getLocale());
+            $this->makeApiRequest($project['api_key'], 'POST', $resource, $message->getTranslation());
         } catch (HttpException $e) {
             if ($e->getCode() === 404) {
                 //Asset does not exist
@@ -159,14 +131,8 @@ class Loco implements TranslationServiceInterface
         $flags = ['fuzzy', 'error', 'review', 'pending'];
 
         try {
-            $this->httpAdapter->send(
-                'POST',
-                sprintf('translations/%s/%s/flag', $message->getId(), $message->getLocale()),
-                [
-                    'query' => ['key' => $project['api_key']],
-                    'body' => ['flag' => $flags[$type]],
-                ]
-            );
+            $resource = sprintf('translations/%s/%s/flag', $message->getId(), $message->getLocale());
+            $this->makeApiRequest($project['api_key'], 'POST', $resource, ['flag' => $flags[$type]]);
         } catch (HttpException $e) {
             if ($e->getCode() === 404) {
                 //Message does not exist
@@ -190,20 +156,13 @@ class Loco implements TranslationServiceInterface
         $project = $this->getProject($message);
 
         try {
-            $response = $this->httpAdapter->send(
-                'POST',
-                'assets',
-                [
-                    'query' => ['key' => $project['api_key']],
-                    'body' => [
-                        'id' => $message->getId(),
-                        'name' => $message->getId(),
-                        'type' => 'text',
-                        // Tell Loco not to translate the asset
-                        'default' => 'untranslated',
-                    ],
-                ]
-            );
+            $response = $this->makeApiRequest($project['api_key'], 'POST', 'assets', [
+                'id' => $message->getId(),
+                'name' => $message->getId(),
+                'type' => 'text',
+                // Tell Loco not to translate the asset
+                'default' => 'untranslated',
+            ]);
 
             if ($message->hasParameters()) {
                 // Send those parameter as a note to Loco
@@ -212,14 +171,8 @@ class Loco implements TranslationServiceInterface
                     $notes .= 'Parameter: '.$key.' (i.e. : '.$value.")\n";
                 }
 
-                $this->httpAdapter->send(
-                    'PATCH',
-                    sprintf('assets/%s.json', $message->getId()),
-                    [
-                        'query' => ['key' => $project['api_key']],
-                        'json' => ['notes' => $notes],
-                    ]
-                );
+                $resource = sprintf('assets/%s.json', $message->getId());
+                $this->makeApiRequest($project['api_key'], 'PATCH', $resource, ['notes' => $notes]);
             }
         } catch (HttpException $e) {
             if ($e->getCode() === 409) {
@@ -265,14 +218,8 @@ class Loco implements TranslationServiceInterface
      */
     protected function addTagToAsset($project, $messageId, $domain)
     {
-        $this->httpAdapter->send(
-            'POST',
-            sprintf('assets/%s/tags', $messageId),
-            [
-                'query' => ['key' => $project['api_key']],
-                'body' => ['name' => $domain],
-            ]
-        );
+        $resource = sprintf('assets/%s/tags', $messageId);
+        $this->makeApiRequest($project['api_key'], 'POST', $resource, ['name' => $domain]);
     }
 
     /**
@@ -281,10 +228,6 @@ class Loco implements TranslationServiceInterface
      */
     public function downloadAllTranslations()
     {
-        if (!is_dir($this->filesystemService->getTargetDir())) {
-            mkdir($this->filesystemService->getTargetDir(), 0777, true);
-        }
-
         $data = [];
         foreach ($this->projects as $name => $config) {
             if (empty($config['domains'])) {
@@ -295,7 +238,7 @@ class Loco implements TranslationServiceInterface
                 }
             }
         }
-        $this->httpAdapter->downloadFiles($data);
+        $this->requestManager->downloadFiles($this->filesystemService, $data);
     }
 
     /**
@@ -322,7 +265,7 @@ class Loco implements TranslationServiceInterface
      */
     protected function doSynchronizeDomain(array &$config, $domain, $useDomainAsFilter)
     {
-        $query = $this->getExportQueryParams($config['api_key']);
+        $query = $this->getExportQueryParams();
 
         if ($useDomainAsFilter) {
             $query['filter'] = $domain;
@@ -330,13 +273,9 @@ class Loco implements TranslationServiceInterface
 
         foreach ($config['locales'] as $locale) {
             try {
-                $response = $this->httpAdapter->send(
-                    'GET',
-                    sprintf('export/locale/%s.%s', $locale, 'json'),
-                    [
-                        'query' => $query,
-                    ]
-                );
+                $resource = sprintf('export/locale/%s.%s', $locale, 'json');
+                $this->makeApiRequest($config['api_key'], 'GET', $resource, ['query' => $query]);
+
             } catch (HttpException $e) {
                 //TODO error handling
                 throw $e;
@@ -400,7 +339,7 @@ class Loco implements TranslationServiceInterface
      */
     protected function getUrls(array &$data, array &$config, $domain, $useDomainAsFilter)
     {
-        $query = $this->getExportQueryParams($config['api_key']);
+        $query = $this->getExportQueryParams();
 
         if ($useDomainAsFilter) {
             $query['filter'] = $domain;
@@ -408,10 +347,10 @@ class Loco implements TranslationServiceInterface
 
         foreach ($config['locales'] as $locale) {
             // Build url
-            $url = sprintf('export/locale/%s.%s?%s', $locale, $this->filesystemService->getFileExtension(), http_build_query($query));
-            $path = sprintf('%s/%s.%s.%s', $this->filesystemService->getTargetDir(), $domain, $locale, $this->filesystemService->getFileExtension());
+            $url = sprintf('%sexport/locale/%s.%s?%s', self::BASE_URL, $locale, $this->filesystemService->getFileExtension(), http_build_query($query));
+            $fileName = sprintf('%s.%s.%s', $domain, $locale, $this->filesystemService->getFileExtension());
 
-            $data[$url] = $path;
+            $data[$url] = $fileName;
         }
     }
 
@@ -420,17 +359,16 @@ class Loco implements TranslationServiceInterface
      *
      * @return array
      */
-    private function getExportQueryParams($apiKey)
+    private function getExportQueryParams()
     {
         $data = array(
-            'key' => $apiKey,
             'index' => 'id',
             'status' => 'translated',
         );
         switch ($this->filesystemService->getFileExtension()) {
             case 'php':
                 $data['format'] = 'zend'; // 'Zend' will give us a flat array
-            case 'xlf':
+            case 'xliff':
             default:
                 $data['format'] = 'symfony';
         }

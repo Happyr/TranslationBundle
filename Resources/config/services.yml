@@ -37,10 +37,7 @@ services:
       - { name: kernel.event_listener, event: console.terminate, method: onTerminate, priority: -20 }
 
 
-  happyr.translation.http_adapter.guzzle5:
-    class: Happyr\TranslationBundle\Http\Guzzle5Adapter
+  happyr.translation.request_manager:
+    class: Happyr\TranslationBundle\Http\RequestManager
     public: false
 
-  happyr.translation.http_adapter.guzzle6:
-    class: Happyr\TranslationBundle\Http\Guzzle6Adapter
-    public: false
