@@ -24,7 +24,7 @@ class Configuration implements ConfigurationInterface
             ->booleanNode('auto_add_assets')->defaultFalse()->end()
             ->booleanNode('allow_edit')->defaultTrue()->end()
             ->scalarNode('http_adapter')->defaultValue('guzzle5')->end()
-            ->enumNode('file_extension')->values(array('xlf', 'php'))->defaultValue('xlf')->end()
+            ->enumNode('file_extension')->values(array('csv', 'ini', 'json', 'mo', 'php', 'po', 'qt', 'yaml', 'xliff'))->defaultValue('xliff')->end()
             ->arrayNode('locales')
                 ->requiresAtLeastOneElement()
                 ->prototype('scalar')->end()

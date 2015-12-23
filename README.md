@@ -74,52 +74,6 @@ _happyr_translation:
     
 ```
 
-You can choose local translation storage file type by changing the file_extension value in your config.yml.
-As of now, PHP (php) and XLIFF (xlf) are supported (xlf is the default value).
-If you choose another file type, you have to choose the appropriate Loader and Dumper in your service.yml.
-
-Loader and Dumper for XLIFF resources (default)
-``` yaml
-# /app/config/config.yml
-happyr_translation:
-  file_extension: 'xlf'
-    
-# /app/config/services.yml
-services:
-  # XLIFF Loader
-  happyr.translation.loader:
-    class: Symfony\Component\Translation\Loader\XliffFileLoader
-    tags:
-      - { name: 'translation.loader', alias: 'xliff' }
-
-  # XLIFF Dump
-  happyr.translation.dumper:
-    class: Symfony\Component\Translation\Dumper\XliffFileDumper
-    tags:
-      - { name: 'translation.dumper', alias: 'xliff' }
-```
-
-Loader and Dumper for PHP resources
-``` yaml
-# /app/config/config.yml
-happyr_translation:
-  file_extension: 'php'
-    
-# /app/config/services.yml
-services:
-  # PHP Loader
-  happyr.translation.loader:
-    class: Symfony\Component\Translation\Loader\PhpFileLoader
-    tags:
-      - { name: 'translation.loader', alias: 'php' }
-
-  # PHP Dumper
-  happyr.translation.dumper:
-    class: Symfony\Component\Translation\Dumper\PhpFileDumper
-    tags:
-      - { name: 'translation.dumper', alias: 'php' }
-```
-
 If composer installs guzzle 6+ please mind the following configuration:
 ``` yaml
 happyr_translation:
@@ -131,7 +85,7 @@ happyr_translation:
 ``` yaml
 
 happyr_translation:
-  file_extension: 'xlf'
+  file_extension: 'xliff' # could be  'json', 'mo', 'php', 'po', 'yaml' and many more
   locales: []
   dimensions: []
   translation_service: 'loco'
