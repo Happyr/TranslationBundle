@@ -2,10 +2,10 @@
 
 namespace Happyr\TranslationBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class HappyrTranslationExtension extends Extension
 {
@@ -28,7 +28,6 @@ class HappyrTranslationExtension extends Extension
         }
 
         $container->setParameter('translation.toolbar.allow_edit', $config['allow_edit']);
-
 
         $targetDir = rtrim($config['target_dir'], '/');
         $container->findDefinition('happyr.translation.filesystem')
