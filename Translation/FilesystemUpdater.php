@@ -67,12 +67,16 @@ class FilesystemUpdater
     }
 
     /**
-     * Returns translation dir.
-     *
-     * @return string
+     * @param string $fileName
+     * @param string $data the file contents
      */
-    public function getTargetDir() {
-        return $this->targetDir;
+    public function writeToFile($fileName, $data) {
+
+        if (!is_dir($this->targetDir)) {
+            mkdir($this->targetDir, 0777, true);
+        }
+
+        file_put_contents(sprintf('%s/%s', $this->targetDir, $fileName, $data));
     }
 
     /**
