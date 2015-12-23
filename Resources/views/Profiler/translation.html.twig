@@ -4,8 +4,6 @@
  # Authors Tobias Nyholm, Damien Alexandre (damienalexandre), Damien Harper
  #}
 
-{% import _self as helper %}
-
 {% block panelContent %}
     <h2>Translation Metrics</h2>
 
@@ -62,7 +60,7 @@
                         <p>None of the used translation messages are defined for the given locale.</p>
                     </div>
                 {% else %}
-                    {{ helper.render_table(messages_defined) }}
+                    {{ _self.render_table(messages_defined) }}
                 {% endif %}
             </div>
         </div>
@@ -81,7 +79,7 @@
                         <p>No fallback translation messages were used.</p>
                     </div>
                 {% else %}
-                    {{ helper.render_table(messages_fallback) }}
+                    {{ _self.render_table(messages_fallback) }}
                 {% endif %}
             </div>
         </div>
