@@ -29,15 +29,6 @@ class HappyrTranslationExtension extends Extension
 
         $container->setParameter('translation.toolbar.allow_edit', $config['allow_edit']);
 
-        /*
-         * Set an alias for the adapter
-         */
-        $adapter = $config['http_adapter'];
-        if ($adapter === 'guzzle5' || $adapter === 'guzzle6') {
-            //Use one of our adapters
-            $adapter = 'happyr.translation.http_adapter.'.$adapter;
-        }
-        $container->setAlias('happyr.translation.http_adapter', $adapter);
 
         $targetDir = rtrim($config['target_dir'], '/');
         $container->findDefinition('happyr.translation.filesystem')

@@ -79,13 +79,6 @@ _happyr_translation:
     
 ```
 
-If composer installs guzzle 6+ please mind the following configuration:
-``` yaml
-happyr_translation:
-  http_adapter: 'guzzle5' # << use this OR ...
-  http_adapter: 'guzzle6' # << .. this depending on your installed guzzle version
-```
-
 ### Default configuration
 ``` yaml
 
@@ -97,9 +90,7 @@ happyr_translation:
   target_dir: '%kernel.root_dir%/Resources/translations'
   auto_add_assets: false
   allow_edit: true
-  http_adapter: 'guzzle5'
 ```
-
 
 # TODO
 
