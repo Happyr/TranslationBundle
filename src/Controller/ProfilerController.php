@@ -9,7 +9,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\DataCollectorTranslator;
-use Symfony\Component\Translation\Tests\DataCollector\TranslationDataCollectorTest;
 
 /**
  * @author Tobias Nyholm

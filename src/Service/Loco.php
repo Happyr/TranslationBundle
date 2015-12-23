@@ -8,7 +8,6 @@ use Happyr\TranslationBundle\Model\Message;
 use Happyr\TranslationBundle\Translation\FilesystemUpdater;
 
 /**
- *
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
 class Loco implements TranslationServiceInterface
@@ -31,9 +30,9 @@ class Loco implements TranslationServiceInterface
     private $filesystemService;
 
     /**
-     * @param RequestManager $requestManager
-     * @param FilesystemUpdater    $fs
-     * @param array                $projects
+     * @param RequestManager    $requestManager
+     * @param FilesystemUpdater $fs
+     * @param array             $projects
      */
     public function __construct(RequestManager $requestManager, FilesystemUpdater $fs, array $projects)
     {
@@ -42,15 +41,14 @@ class Loco implements TranslationServiceInterface
         $this->filesystemService = $fs;
     }
 
-    protected function makeApiRequest($key, $method, $resource, $body = null, array $query=array())
+    protected function makeApiRequest($key, $method, $resource, $body = null, array $query = array())
     {
         if (is_array($body)) {
             $body = json_encode($body);
         }
 
-        $query['key']=$key;
+        $query['key'] = $key;
         $url = self::BASE_URL.$resource.http_build_query($query);
-
 
         return $this->requestManager->send($method, $url, $body);
     }
@@ -275,7 +273,6 @@ class Loco implements TranslationServiceInterface
             try {
                 $resource = sprintf('export/locale/%s.%s', $locale, 'json');
                 $this->makeApiRequest($config['api_key'], 'GET', $resource, ['query' => $query]);
-
             } catch (HttpException $e) {
                 //TODO error handling
                 throw $e;

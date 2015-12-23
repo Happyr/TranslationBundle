@@ -19,7 +19,7 @@ class Guzzle6Adapter implements HttpAdapterInterface
     public function send($method, $url, $data)
     {
         $client = new Client([
-            'base_uri' => HttpAdapterInterface::BASE_URL
+            'base_uri' => HttpAdapterInterface::BASE_URL,
         ]);
 
         try {
@@ -37,6 +37,7 @@ class Guzzle6Adapter implements HttpAdapterInterface
     public function downloadFiles(array $data)
     {
         trigger_error('Not yet implemented', E_USER_WARNING);
+
         return;
 
         $client = new Client();
