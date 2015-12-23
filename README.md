@@ -83,7 +83,7 @@ _happyr_translation:
 ``` yaml
 
 happyr_translation:
-  file_extension: 'xliff' # could be  'json', 'mo', 'php', 'po', 'yaml' and many more
+  file_extension: 'xlf' # could be  'json', 'mo', 'php', 'po', 'yaml' and many more
   locales: []
   dimensions: []
   translation_service: 'loco'

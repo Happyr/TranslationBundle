@@ -70,12 +70,14 @@ class HappyrTranslationExtension extends Extension
      */
     protected function configureLoaderAndDumper(ContainerBuilder $container, $fileExtension)
     {
-        $loader = $container->getDefinition('happyr.translation.loader');
-        $loader->setClass(sprintf('Symfony\Component\Translation\Loader\%sFileLoader', ucfirst($fileExtension)));
+        if ($fileExtension === 'xlf') {
+            $fileExtension = 'xliff';
+        }
+
+        $loader = $container->register('happyr.translation.loader', sprintf('Symfony\Component\Translation\Loader\%sFileLoader', ucfirst($fileExtension)));
         $loader->addTag('translation.loader', ['alias' => $fileExtension]);
 
-        $dumper = $container->getDefinition('happyr.translation.dumper');
-        $dumper->setClass(sprintf('Symfony\Component\Translation\Dumper\%sFileDumper', ucfirst($fileExtension)));
+        $dumper = $container->register('happyr.translation.dumper', sprintf('Symfony\Component\Translation\Dumper\%sFileDumper', ucfirst($fileExtension)));
         $dumper->addTag('translation.dumper', ['alias' => $fileExtension]);
     }
 }

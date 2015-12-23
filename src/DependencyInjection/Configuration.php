@@ -23,7 +23,7 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('target_dir')->defaultValue('%kernel.root_dir%/Resources/translations')->end()
             ->booleanNode('auto_add_assets')->defaultFalse()->end()
             ->booleanNode('allow_edit')->defaultTrue()->end()
-            ->enumNode('file_extension')->values(array('csv', 'ini', 'json', 'mo', 'php', 'po', 'qt', 'yaml', 'xliff'))->defaultValue('xliff')->end()
+            ->enumNode('file_extension')->values(array('csv', 'ini', 'json', 'mo', 'php', 'po', 'qt', 'yaml', 'xlf'))->defaultValue('xlf')->end()
             ->arrayNode('locales')
                 ->requiresAtLeastOneElement()
                 ->prototype('scalar')->end()

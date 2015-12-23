@@ -126,14 +126,13 @@ class Loco implements TranslationServiceInterface
      * If there is something wrong with the translation, please flag it.
      *
      * @param Message $message
-     * @param int     $type    0: Fuzzy, 1: Error, 2: Review, 3: Pending
+     * @param int     $type    0: Fuzzy, 1: Incorrect, 2: Provisional, 3: Unapproved, 4: Incomplete
      *
      * @return bool
      */
     public function flagTranslation(Message $message, $type = 0)
     {
         $project = $this->getProject($message);
-        //$flags = ['fuzzy', 'error', 'review', 'pending'];
         $flags = ['fuzzy', 'incorrect', 'provisional', 'unapproved', 'incomplete'];
 
         try {
@@ -337,9 +336,9 @@ class Loco implements TranslationServiceInterface
      * @param string $domain
      * @param bool   $useDomainAsFilter
      */
-    protected function getUrls(array &$data, array &$config, $domain, $useDomainAsFilter)
+    protected function getUrls(array &$data, array $config, $domain, $useDomainAsFilter)
     {
-        $query = $this->getExportQueryParams();
+        $query = $this->getExportQueryParams($config['api_key']);
 
         if ($useDomainAsFilter) {
             $query['filter'] = $domain;
@@ -359,17 +358,18 @@ class Loco implements TranslationServiceInterface
      *
      * @return array
      */
-    private function getExportQueryParams()
+    private function getExportQueryParams($key)
     {
         $data = array(
             'index' => 'id',
             'status' => 'translated',
+            'key' => $key,
         );
         switch ($this->filesystemService->getFileExtension()) {
             case 'php':
                 $data['format'] = 'zend'; // 'Zend' will give us a flat array
                 break;
-            case 'xliff':
+            case 'xlf':
             default:
                 $data['format'] = 'symfony';
         }

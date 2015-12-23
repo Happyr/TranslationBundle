@@ -1,15 +1,6 @@
 parameters:
 
 services:
-  happyr.translation.loader:
-    class: Symfony\Component\Translation\Loader\XliffFileLoader
-    tags:
-      - { name: 'translation.loader', alias: 'xliff' }
-
-  happyr.translation.dumper:
-    class: Symfony\Component\Translation\Dumper\XliffFileDumper
-    tags:
-      - { name: 'translation.dumper', alias: 'xliff' }
 
   # Custom data_collector to use our own template
   happyr.translation.data_collector:

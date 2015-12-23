@@ -77,7 +77,7 @@ class FilesystemUpdater
             mkdir($this->targetDir, 0777, true);
         }
 
-        file_put_contents(sprintf('%s/%s', $this->targetDir, $fileName, $data));
+        file_put_contents(sprintf('%s/%s', $this->targetDir, $fileName), $data);
     }
 
     /**
