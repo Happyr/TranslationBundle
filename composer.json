@@ -26,7 +26,6 @@
         "psr-4": {
             "Happyr\\TranslationBundle\\": "src/"
         }
-    },
-    "target-dir": "Happyr/TranslationBundle"
+    }
 }
 
