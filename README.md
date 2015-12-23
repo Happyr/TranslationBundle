@@ -21,11 +21,11 @@ php app/console happyr:translation:download
 
 When you have added new translations you may submit these to your translation SaaS by the WebProfiler toolbar.
 
-![New translations to SaaS](Resources/doc/images/missing-translation-example.gif)
+![New translations to SaaS](src/Resources/doc/images/missing-translation-example.gif)
 
 You may also change translations and flag them from the same WebProfiler page. 
 
-![Manage translations with SaaS](Resources/doc/images/edit-flag-sync-example.gif)
+![Manage translations with SaaS](src/Resources/doc/images/edit-flag-sync-example.gif)
 
 When you want to fetch new translations from your SaaS you should run the synchronize command. This command will
 keep your current placeholders from missing translations. 
@@ -37,6 +37,11 @@ php app/console happyr:translation:sync
 ## Install
 
 Install the bundle with `composer require happyr/translation-bundle`
+
+You do also need to choose what library to use when you are sending http messages. Consult the [php-http/client-implementation](https://packagist.org/providers/php-http/client-implementation) virtual package to find adapters to use. For more information about virtual packages please refer to[Httplug](http://docs.httplug.io/en/latest/virtual-package/). Example:
+```bash
+php composer.phar require php-http/guzzle6-adapter:dev-master
+```
 
 ## Configure
 
