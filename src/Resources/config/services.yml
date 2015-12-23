@@ -40,4 +40,6 @@ services:
   happyr.translation.request_manager:
     class: Happyr\TranslationBundle\Http\RequestManager
     public: false
+    calls:
+      - [ setLogger, ["@?logger"] ]
 

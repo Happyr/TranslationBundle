@@ -5,6 +5,6 @@ namespace Happyr\TranslationBundle\Exception;
 /**
  * @author Tobias Nyholm
  */
-class HttpException extends \Exception
+class HttpException extends HappyrTranslationException
 {
 }

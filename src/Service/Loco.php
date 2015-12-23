@@ -41,16 +41,23 @@ class Loco implements TranslationServiceInterface
         $this->filesystemService = $fs;
     }
 
-    protected function makeApiRequest($key, $method, $resource, $body = null, array $query = array())
+    protected function makeApiRequest($key, $method, $resource, $body = null, $type = 'form')
     {
-        if (is_array($body)) {
-            $body = json_encode($body);
+        $headers = array();
+        if ($body !== null) {
+            if ($type === 'form') {
+                $body = http_build_query($body);
+                $headers['Content-Type']='application/x-www-form-urlencoded';
+            } elseif ($type === 'json') {
+                $body = json_encode($body);
+                $headers['Content-Type']='application/json';
+            }
         }
 
         $query['key'] = $key;
-        $url = self::BASE_URL.$resource.http_build_query($query);
+        $url = self::BASE_URL.$resource.'?'.http_build_query($query);
 
-        return $this->requestManager->send($method, $url, $body);
+        return $this->requestManager->send($method, $url, $body, $headers);
     }
 
     /**
@@ -126,7 +133,8 @@ class Loco implements TranslationServiceInterface
     public function flagTranslation(Message $message, $type = 0)
     {
         $project = $this->getProject($message);
-        $flags = ['fuzzy', 'error', 'review', 'pending'];
+        //$flags = ['fuzzy', 'error', 'review', 'pending'];
+        $flags = ['fuzzy', 'incorrect', 'provisional', 'unapproved', 'incomplete'];
 
         try {
             $resource = sprintf('translations/%s/%s/flag', $message->getId(), $message->getLocale());
@@ -170,7 +178,7 @@ class Loco implements TranslationServiceInterface
                 }
 
                 $resource = sprintf('assets/%s.json', $message->getId());
-                $this->makeApiRequest($project['api_key'], 'PATCH', $resource, ['notes' => $notes]);
+                $this->makeApiRequest($project['api_key'], 'PATCH', $resource, ['notes' => $notes], 'json');
             }
         } catch (HttpException $e) {
             if ($e->getCode() === 409) {

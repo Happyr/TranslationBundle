@@ -17,7 +17,9 @@
         "sensio/framework-extra-bundle": "~2.7|~3.0",
         "php-http/httplug": "1.0.0-beta",
         "php-http/discovery": "^0.4",
-        "php-http/client-implementation": "1.0"
+        "php-http/plugins": "dev-master",
+        "php-http/client-implementation": "1.0",
+        "psr/log": "1.0.0"
     },
     "require-dev": {
         "php-http/guzzle5-adapter": "dev-master"

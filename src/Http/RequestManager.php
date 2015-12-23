@@ -4,9 +4,14 @@ namespace Happyr\TranslationBundle\Http;
 
 use Happyr\TranslationBundle\Exception\HttpException;
 use Happyr\TranslationBundle\Translation\FilesystemUpdater;
+use Http\Client\Exception\TransferException;
 use Http\Client\HttpClient;
+use Http\Client\Plugin\ErrorPlugin;
+use Http\Client\Plugin\LoggerPlugin;
+use Http\Client\Plugin\PluginClient;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
+use Psr\Log\LoggerInterface;
 
 class RequestManager
 {
@@ -14,6 +19,11 @@ class RequestManager
      * @var HttpClient
      */
     private $client;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * @param array $data
@@ -44,10 +54,15 @@ class RequestManager
     {
         $request = MessageFactoryDiscovery::find()->createRequest($method, $url, $headers, $body);
 
-        $response = $this->getClient()->sendRequest($request);
-        if ($response->getStatusCode() !== 200) {
-            // TODO throw better exception
-            throw new HttpException();
+        try {
+            $response = $this->getClient()->sendRequest($request);
+        } catch (TransferException $e) {
+            $message = 'Error sending request. ';
+            if ($e instanceof \Http\Client\Exception\HttpException) {
+                $message .= (string) $e->getResponse()->getBody();
+            }
+
+            throw new HttpException($message, $e->getCode(), $e);
         }
 
         // TODO add more error checks
@@ -55,12 +70,22 @@ class RequestManager
     }
 
     /**
+     * Return the client. If no client exist, create a new one filled with plugins.
+     *
      * @return HttpClient
      */
     protected function getClient()
     {
         if ($this->client === null) {
-            $this->client = HttpClientDiscovery::find();
+            $plugins = array();
+
+            if ($this->logger) {
+                $plugins[]=new LoggerPlugin($this->logger);
+            }
+
+            $plugins[]=new ErrorPlugin();
+
+            $this->client = new PluginClient(HttpClientDiscovery::find(), $plugins);
         }
 
         return $this->client;
@@ -77,4 +102,18 @@ class RequestManager
 
         return $this;
     }
+
+    /**
+     * @param LoggerInterface $logger
+     *
+     * @return RequestManager
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+
+        return $this;
+    }
+
+
 }
