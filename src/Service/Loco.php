@@ -46,7 +46,9 @@ class Loco implements TranslationServiceInterface
         $headers = array();
         if ($body !== null) {
             if ($type === 'form') {
-                $body = http_build_query($body);
+                if (is_array($body)) {
+                    $body = http_build_query($body);
+                }
                 $headers['Content-Type'] = 'application/x-www-form-urlencoded';
             } elseif ($type === 'json') {
                 $body = json_encode($body);
@@ -173,7 +175,13 @@ class Loco implements TranslationServiceInterface
                 // Send those parameter as a note to Loco
                 $notes = '';
                 foreach ($message->getParameters() as $key => $value) {
-                    $notes .= 'Parameter: '.$key.' (i.e. : '.$value.")\n";
+                    if (!is_array($value)) {
+                        $notes .= 'Parameter: '.$key.' (i.e. : '.$value.")\n";
+                    } else {
+                        foreach ($value as $k => $v) {
+                            $notes .= 'Parameter: '.$k.' (i.e. : '.$v.")\n";
+                        }
+                    }
                 }
 
                 $resource = sprintf('assets/%s.json', $message->getId());
