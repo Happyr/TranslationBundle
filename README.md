@@ -63,10 +63,10 @@ If you just doing one project and have tags for all your translation domains you
 
 # /app/config/config.yml
 happyr_translation:
-  locales: ['en','sv','fr','es']
-  dimensions: ['messages', 'navigation']
   projects:
     acme:
+      locales: ['en','sv','fr','es']
+      domains: ['messages', 'navigation']
       api_key: 'foobar'  
     
 ```
