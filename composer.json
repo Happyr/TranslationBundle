@@ -15,7 +15,7 @@
         "php": ">=5.5.9",
         "symfony/symfony":"~2.7|~3.0",
         "sensio/framework-extra-bundle": "~2.7|~3.0",
-        "php-http/httplug": "1.0.0-beta",
+        "php-http/httplug": "~1.0.0",
         "php-http/discovery": "^0.4|^0.5|^0.6|^0.7",
         "php-http/plugins": "^0.1",
         "php-http/client-implementation": "1.0",
