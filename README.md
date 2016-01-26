@@ -14,7 +14,7 @@ The key features of this bundle is:
 
 ## Usage
 
-To download all translations form logo, simply run: 
+To download all translations from Loco, simply run:
 ``` bash
 php app/console happyr:translation:download
 ```
@@ -40,7 +40,7 @@ Install the bundle with `composer require happyr/translation-bundle`
 
 You do also need to choose what library to use when you are sending http messages. Consult the [php-http/client-implementation](https://packagist.org/providers/php-http/client-implementation) virtual package to find adapters to use. For more information about virtual packages please refer to[Httplug](http://docs.httplug.io/en/latest/virtual-package/). Example:
 ```bash
-php composer.phar require php-http/guzzle6-adapter:dev-master
+php composer.phar require php-http/guzzle6-adapter
 ```
 
 ## Configure
@@ -64,7 +64,7 @@ If you just doing one project and have tags for all your translation domains you
 # /app/config/config.yml
 happyr_translation:
   locales: ['en','sv','fr','es']
-  dimensions: ['messages', 'navigation']
+  domains: ['messages', 'navigation']
   projects:
     acme:
       api_key: 'foobar'  
@@ -85,7 +85,7 @@ _happyr_translation:
 happyr_translation:
   file_extension: 'xlf' # could be  'json', 'mo', 'php', 'po', 'yaml' and many more
   locales: []
-  dimensions: []
+  domains: []
   translation_service: 'loco'
   target_dir: '%kernel.root_dir%/Resources/translations'
   auto_add_assets: false
