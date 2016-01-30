@@ -217,7 +217,7 @@ class Loco implements TranslationServiceInterface
         // Return the first project that has the correct domain and locale
         foreach ($this->projects as $project) {
             if (in_array($message->getDomain(), $project['domains'])) {
-                if (in_array($project['locales'], $message->getLocale())) {
+                if (in_array($message->getLocale(), $project['locales'])) {
                     return $project;
                 }
             }
@@ -246,7 +246,7 @@ class Loco implements TranslationServiceInterface
             if (empty($config['domains'])) {
                 $this->getUrls($data, $config, $name, false);
             } else {
-                foreach ($config['domain'] as $domain) {
+                foreach ($config['domains'] as $domain) {
                     $this->getUrls($data, $config, $domain, true);
                 }
             }
@@ -264,7 +264,7 @@ class Loco implements TranslationServiceInterface
             if (empty($config['domains'])) {
                 $this->doSynchronizeDomain($config, $name, false);
             } else {
-                foreach ($config['domain'] as $domain) {
+                foreach ($config['domains'] as $domain) {
                     $this->doSynchronizeDomain($config, $domain, true);
                 }
             }
@@ -278,7 +278,7 @@ class Loco implements TranslationServiceInterface
      */
     protected function doSynchronizeDomain(array &$config, $domain, $useDomainAsFilter)
     {
-        $query = $this->getExportQueryParams();
+        $query = $this->getExportQueryParams($config['api_key']);
 
         if ($useDomainAsFilter) {
             $query['filter'] = $domain;
@@ -286,7 +286,7 @@ class Loco implements TranslationServiceInterface
 
         foreach ($config['locales'] as $locale) {
             $resource = sprintf('export/locale/%s.%s', $locale, 'json');
-            $this->makeApiRequest($config['api_key'], 'GET', $resource, ['query' => $query]);
+            $response = $this->makeApiRequest($config['api_key'], 'GET', $resource, ['query' => $query]);
 
             $this->flatten($response);
 
