@@ -29,7 +29,8 @@
         "puli/url-generator": "^1.0-beta4"
     },
     "suggest": {
-        "php-http/httplug-bundle": "To easier configure your httplug clients."
+        "php-http/httplug-bundle": "To easier configure your httplug clients.",
+        "happyr/auto-fallback-translation-bundle": "To automatically translate phrases that are missing form your secondary language."
     },
     "autoload": {
         "psr-4": {
