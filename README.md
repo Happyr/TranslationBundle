@@ -43,6 +43,25 @@ You do also need to choose what library to use when you are sending http message
 php composer.phar require php-http/guzzle6-adapter
 ```
 
+### Auto discovery with Puli 
+
+This library has a dependency on `php-http/discovery` that will find a HTTP client and a library that can
+create PSR-7 messages that you already have installed. It uses [Puli](http://docs.puli.io/en/latest/) for the actual 
+discovery. If you do not know about Puli yet you should check it out. 
+
+Puli is in currently under development but they are aiming for a stable release in Mars 2016. To be able to use the beta
+version of Puli you need to add the following packages to your composer.json. 
+
+```json
+"require": {
+    // ...
+    "puli/composer-plugin": "^1.0.0-beta9",
+    "puli/repository": "^1.0-beta9",
+    "puli/discovery": "^1.0-beta9",
+    "puli/url-generator": "^1.0-beta4"
+},
+```
+
 ## Configure
 
 If you have one Loco project per domain you may configure the bundle like this: 
