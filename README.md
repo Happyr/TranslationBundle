@@ -38,28 +38,19 @@ php app/console happyr:translation:sync
 
 Install the bundle with `composer require happyr/translation-bundle`
 
-You do also need to choose what library to use when you are sending http messages. Consult the [php-http/client-implementation](https://packagist.org/providers/php-http/client-implementation) virtual package to find adapters to use. For more information about virtual packages please refer to[Httplug](http://docs.httplug.io/en/latest/virtual-package/). Example:
+You do also need to choose what library to use when you are sending http messages. Consult the [php-http/client-implementation](https://packagist.org/providers/php-http/client-implementation) virtual package to find adapters to use. For more information about virtual packages please refer to [Httplug](http://docs.httplug.io/en/latest/virtual-package/). Example:
 ```bash
 php composer.phar require php-http/guzzle6-adapter
 ```
 
-### Auto discovery with Puli 
+This bundle require you to register a service for the [HttpClient](https://github.com/php-http/httplug/blob/master/src/HttpClient.php)
+and the [MessageFactory](https://github.com/php-http/message-factory/blob/master/src/MessageFactory.php) and then set 
+service name to the config like below. The easiest way of doing this is with the [HttpBundle](https://github.com/php-http/HttplugBundle).
 
-This library has a dependency on `php-http/discovery` that will find a HTTP client and a library that can
-create PSR-7 messages that you already have installed. It uses [Puli](http://docs.puli.io/en/latest/) for the actual 
-discovery. If you do not know about Puli yet you should check it out. 
-
-Puli is in currently under development but they are aiming for a stable release in Mars 2016. To be able to use the beta
-version of Puli you need to add the following packages to your composer.json. 
-
-```json
-"require": {
-    // ...
-    "puli/composer-plugin": "^1.0.0-beta9",
-    "puli/repository": "^1.0-beta9",
-    "puli/discovery": "^1.0-beta9",
-    "puli/url-generator": "^1.0-beta4"
-},
+``` yaml
+happyr_translation:
+  httplug_client: 'httplug.client'
+  httplug_message_factory: 'httplug.message_factory'	
 ```
 
 ## Configure
@@ -74,7 +65,6 @@ happyr_translation:
       api_key: 'foobar' 
     navigation:
       api_key: 'bazbar' 
-
 ```
 
 If you just doing one project and have tags for all your translation domains you may use this configuration:
@@ -86,22 +76,21 @@ happyr_translation:
   domains: ['messages', 'navigation']
   projects:
     acme:
-      api_key: 'foobar'  
-    
+      api_key: 'foobar'   
 ```
 
 You do also need to configure a development route. 
 ``` yaml
 # /app/config/routing_dev.yml
 _happyr_translation:
-  resource: '@HappyrTranslationBundle/Resources/config/routing_dev.yml'
-    
+  resource: '@HappyrTranslationBundle/Resources/config/routing_dev.yml'  
 ```
 
 ### Default configuration
 ``` yaml
-
 happyr_translation:
+  httplug_client: 'httplug.client'
+  httplug_message_factory: 'httplug.message_factory'	
   file_extension: 'xlf' # could be  'json', 'mo', 'php', 'po', 'yaml' and many more
   locales: []
   domains: []
