@@ -9,6 +9,13 @@ services:
     tags:
       - { name: 'data_collector', template: "@HappyrTranslation/Profiler/translation", id: "translation", priority: 200 }
 
+  happyr.translation.service.blackhole:
+    class: Happyr\TranslationBundle\Service\Blackhole
+
+  happyr.translation.service.filesystem:
+    class: Happyr\TranslationBundle\Service\Filesystem
+    arguments: ['@happyr.translation.filesystem']
+
   happyr.translation.service.loco:
     class: Happyr\TranslationBundle\Service\Loco
     arguments:
