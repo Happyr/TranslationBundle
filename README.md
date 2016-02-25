@@ -45,7 +45,7 @@ php composer.phar require php-http/guzzle6-adapter
 
 This bundle require you to register a service for the [HttpClient](https://github.com/php-http/httplug/blob/master/src/HttpClient.php)
 and the [MessageFactory](https://github.com/php-http/message-factory/blob/master/src/MessageFactory.php) and then set 
-service name to the config like below. The easiest way of doing this is with the [HttpBundle](https://github.com/php-http/HttplugBundle).
+service name to the config like below. The easiest way of doing this is with the [HttplugBundle](https://github.com/php-http/HttplugBundle).
 
 ``` yaml
 happyr_translation:
