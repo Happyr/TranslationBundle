@@ -19,7 +19,7 @@ class Configuration implements ConfigurationInterface
         $root = $treeBuilder->root('happyr_translation');
 
         $root->children()
-            ->enumNode('translation_service')->values(array('loco', 'foobar'))->defaultValue('loco')->end()
+            ->enumNode('translation_service')->values(array('blackhole', 'filesystem', 'loco'))->defaultValue('loco')->end()
             ->scalarNode('target_dir')->defaultValue('%kernel.root_dir%/Resources/translations')->end()
             ->scalarNode('httplug_client')->defaultValue('httplug.client')->cannotBeEmpty()->end()
             ->scalarNode('httplug_message_factory')->defaultValue('httplug.message_factory')->cannotBeEmpty()->end()
@@ -48,7 +48,6 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $node = $treeBuilder->root('projects');
         $node
-            ->isRequired()
             ->useAttributeAsKey('name')
             ->prototype('array')
             ->children()
