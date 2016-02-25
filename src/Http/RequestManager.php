@@ -11,6 +11,7 @@ use Http\Client\Plugin\LoggerPlugin;
 use Http\Client\Plugin\PluginClient;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
+use Http\Message\MessageFactory;
 use Psr\Log\LoggerInterface;
 
 class RequestManager
@@ -21,9 +22,20 @@ class RequestManager
     private $client;
 
     /**
-     * @var LoggerInterface
+     * @var MessageFactory
      */
-    private $logger;
+    private $messageFactory;
+
+    /**
+     *
+     * @param HttpClient $client
+     * @param MessageFactory $messageFactory
+     */
+    public function __construct(HttpClient $client, MessageFactory $messageFactory)
+    {
+        $this->client = new PluginClient($client, [new ErrorPlugin()]);
+        $this->messageFactory = $messageFactory;
+    }
 
     /**
      * @param array $data
@@ -32,7 +44,7 @@ class RequestManager
      */
     public function downloadFiles(FilesystemUpdater $filesystem, array $data)
     {
-        $factory = MessageFactoryDiscovery::find();
+        $factory = $this->getMessageFactory();
         $client = $this->getClient();
 
         foreach ($data as $url => $fileName) {
@@ -52,7 +64,7 @@ class RequestManager
      */
     public function send($method, $url, $body = null, $headers = array())
     {
-        $request = MessageFactoryDiscovery::find()->createRequest($method, $url, $headers, $body);
+        $request = $this->getMessageFactory()->createRequest($method, $url, $headers, $body);
 
         try {
             $response = $this->getClient()->sendRequest($request);
@@ -70,48 +82,19 @@ class RequestManager
     }
 
     /**
-     * Return the client. If no client exist, create a new one filled with plugins.
-     *
      * @return HttpClient
      */
-    protected function getClient()
+    public function getClient()
     {
-        if ($this->client === null) {
-            $plugins = array();
-
-            if ($this->logger) {
-                $plugins[] = new LoggerPlugin($this->logger);
-            }
-
-            $plugins[] = new ErrorPlugin();
-
-            $this->client = new PluginClient(HttpClientDiscovery::find(), $plugins);
-        }
-
         return $this->client;
     }
 
     /**
-     * @param HttpClient $client
      *
-     * @return RequestManager
+     * @return \Http\Message\MessageFactory
      */
-    public function setClient($client)
+    private function getMessageFactory()
     {
-        $this->client = $client;
-
-        return $this;
-    }
-
-    /**
-     * @param LoggerInterface $logger
-     *
-     * @return RequestManager
-     */
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-
-        return $this;
+        return $this->messageFactory;
     }
 }

@@ -5,6 +5,7 @@ namespace Happyr\TranslationBundle\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class HappyrTranslationExtension extends Extension
@@ -35,6 +36,10 @@ class HappyrTranslationExtension extends Extension
             ->replaceArgument(3, $config['file_extension']);
 
         $this->configureLoaderAndDumper($container, $config['file_extension']);
+
+        $container->getDefinition('happyr.translation.request_manager')
+            ->replaceArgument(0, new Reference($config['httplug_client']))
+            ->replaceArgument(1, new Reference($config['httplug_message_factory']));
 
         /*
          * Set alias for the translation service

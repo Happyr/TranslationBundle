@@ -27,10 +27,7 @@ services:
       - { name: kernel.event_listener, event: kernel.terminate, method: onTerminate, priority: -20 }
       - { name: kernel.event_listener, event: console.terminate, method: onTerminate, priority: -20 }
 
-
   happyr.translation.request_manager:
     class: Happyr\TranslationBundle\Http\RequestManager
+    arguments: [~, ~]
     public: false
-    calls:
-      - [ setLogger, ["@?logger"] ]
-
