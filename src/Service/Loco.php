@@ -333,7 +333,11 @@ class Loco implements TranslationServiceInterface
                     unset($messages[$key]);
                 }
             } elseif (null !== $path) {
-                $messages[$path.'.'.$key] = $value;
+                if ($key !== 0) {
+                    $messages[$path.'.'.$key] = $value;
+                } else {
+                    $messages[$path] = $value;
+                }
             }
         }
     }
