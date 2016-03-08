@@ -5,6 +5,7 @@ namespace Happyr\TranslationBundle\Translation;
 use Happyr\TranslationBundle\Model\Message;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Translation\Dumper\DumperInterface;
+use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -110,7 +111,12 @@ class FilesystemUpdater
             $key = $m->getLocale().$m->getDomain();
             if (!isset($catalogues[$key])) {
                 $file = sprintf('%s/%s.%s.%s', $this->targetDir, $m->getDomain(), $m->getLocale(), $this->getFileExtension());
-                $catalogues[$key] = $this->loader->load($file, $m->getLocale(), $m->getDomain());
+                
+                try {
+                    $catalogues[$key] = $this->loader->load($file, $m->getLocale(), $m->getDomain());
+                } catch (NotFoundResourceException $e) {
+                    $catalogues[$key] = new MessageCatalogue($m->getLocale());
+                }
             }
 
             $translation = $m->getTranslation();
