@@ -2,10 +2,14 @@
 
 namespace Happyr\TranslationBundle\Service;
 
+use Happyr\TranslationBundle\Exception\HappyrTranslationException;
 use Happyr\TranslationBundle\Exception\HttpException;
 use Happyr\TranslationBundle\Http\RequestManager;
 use Happyr\TranslationBundle\Model\Message;
 use Happyr\TranslationBundle\Translation\FilesystemUpdater;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
+use Symfony\Component\Translation\DataCollectorTranslator;
+use Symfony\Component\Translation\Translator;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
@@ -30,18 +34,35 @@ class Loco implements TranslationServiceInterface
     private $filesystemService;
 
     /**
-     * @param RequestManager    $requestManager
-     * @param FilesystemUpdater $fs
-     * @param array             $projects
+     * @var DataCollectorTranslator filesystemService
      */
-    public function __construct(RequestManager $requestManager, FilesystemUpdater $fs, array $projects)
+    private $translator;
+
+    /**
+     * @param DataCollectorTranslator $translator
+     * @param RequestManager $requestManager
+     * @param FilesystemUpdater $fs
+     * @param array $projects
+     */
+    public function __construct(RequestManager $requestManager, FilesystemUpdater $fs, DataCollectorTranslator $translator, array $projects)
     {
+        $this->translator = $translator;
         $this->requestManager = $requestManager;
         $this->projects = $projects;
         $this->filesystemService = $fs;
     }
 
-    protected function makeApiRequest($key, $method, $resource, $body = null, $type = 'form')
+    /**
+     * @param $key
+     * @param $method
+     * @param $resource
+     * @param null $body
+     * @param string $type
+     * @param array $extraQuery
+     * @return array
+     * @throws HttpException
+     */
+    protected function makeApiRequest($key, $method, $resource, $body = null, $type = 'form', $extraQuery = array())
     {
         $headers = array();
         if ($body !== null) {
@@ -56,8 +77,8 @@ class Loco implements TranslationServiceInterface
             }
         }
 
-        $query['key'] = $key;
-        $url = self::BASE_URL.$resource.'?'.http_build_query($query);
+        $query = array_merge($extraQuery, ['key' => $key]);
+        $url = self::BASE_URL . $resource . '?' . http_build_query($query);
 
         return $this->requestManager->send($method, $url, $body, $headers);
     }
@@ -128,7 +149,7 @@ class Loco implements TranslationServiceInterface
      * If there is something wrong with the translation, please flag it.
      *
      * @param Message $message
-     * @param int     $type    0: Fuzzy, 1: Incorrect, 2: Provisional, 3: Unapproved, 4: Incomplete
+     * @param int $type 0: Fuzzy, 1: Incorrect, 2: Provisional, 3: Unapproved, 4: Incomplete
      *
      * @return bool
      */
@@ -176,10 +197,10 @@ class Loco implements TranslationServiceInterface
                 $notes = '';
                 foreach ($message->getParameters() as $key => $value) {
                     if (!is_array($value)) {
-                        $notes .= 'Parameter: '.$key.' (i.e. : '.$value.")\n";
+                        $notes .= 'Parameter: ' . $key . ' (i.e. : ' . $value . ")\n";
                     } else {
                         foreach ($value as $k => $v) {
-                            $notes .= 'Parameter: '.$k.' (i.e. : '.$v.")\n";
+                            $notes .= 'Parameter: ' . $k . ' (i.e. : ' . $v . ")\n";
                         }
                     }
                 }
@@ -255,6 +276,57 @@ class Loco implements TranslationServiceInterface
     }
 
     /**
+     * Upload all the translations from the symfony project into Loco. This will override
+     * every changed strings in loco
+     */
+    public function uploadAllTranslations()
+    {
+        foreach ($this->projects as $name => $config) {
+            if (empty($config['domains'])) {
+                $this->doUploadDomains($config, $name, false);
+            } else {
+                foreach ($config['domains'] as $domain) {
+                    $this->doUploadDomains($config, $domain, true);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param array $config
+     * @param       $domain
+     * @param       $useDomainAsFilter
+     */
+    protected function doUploadDomains(array &$config, $domain, $useDomainAsFilter)
+    {
+        $query = $this->getExportQueryParams($config['api_key']);
+
+        if ($useDomainAsFilter) {
+            $query['filter'] = $domain;
+        }
+
+        foreach ($config['locales'] as $locale) {
+            $extension = $this->filesystemService->getFileExtension();
+            $file = $this->filesystemService->getTargetDir();
+            $file .= sprintf('/%s.%s.%s', $domain, $locale, $extension);
+
+            if (is_file($file)) {
+                $query = [
+                    'index' => 'id',
+                    'tag' => $domain,
+                    'locale'=> $locale
+                ];
+
+                $resource = sprintf('import/%s', $extension);
+                $response = $this->makeApiRequest($config['api_key'], 'POST', $resource, file_get_contents($file), 'form', $query);
+                $this->flatten($response);
+            } else {
+                throw new FileNotFoundException(sprintf("Can't find %s file, perhaps you should generate the translations file ?", $file));
+            }
+        }
+    }
+
+    /**
      * Synchronize all the translations with Loco. This will keep placeholders. This function is slower
      * than just to download the translations.
      */
@@ -316,9 +388,9 @@ class Loco implements TranslationServiceInterface
      *
      * This function takes an array by reference and will modify it
      *
-     * @param array  &$messages The array that will be flattened
-     * @param array  $subnode   Current subnode being parsed, used internally for recursive calls
-     * @param string $path      Current path being parsed, used internally for recursive calls
+     * @param array &$messages The array that will be flattened
+     * @param array $subnode Current subnode being parsed, used internally for recursive calls
+     * @param string $path Current path being parsed, used internally for recursive calls
      */
     private function flatten(array &$messages, array $subnode = null, $path = null)
     {
@@ -327,22 +399,22 @@ class Loco implements TranslationServiceInterface
         }
         foreach ($subnode as $key => $value) {
             if (is_array($value)) {
-                $nodePath = $path ? $path.'.'.$key : $key;
+                $nodePath = $path ? $path . '.' . $key : $key;
                 $this->flatten($messages, $value, $nodePath);
                 if (null === $path) {
                     unset($messages[$key]);
                 }
             } elseif (null !== $path) {
-                $messages[$path.'.'.$key] = $value;
+                $messages[$path . '.' . $key] = $value;
             }
         }
     }
 
     /**
-     * @param array  $data
-     * @param array  $config
+     * @param array $data
+     * @param array $config
      * @param string $domain
-     * @param bool   $useDomainAsFilter
+     * @param bool $useDomainAsFilter
      */
     protected function getUrls(array &$data, array $config, $domain, $useDomainAsFilter)
     {

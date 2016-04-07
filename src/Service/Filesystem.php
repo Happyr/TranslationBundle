@@ -63,6 +63,13 @@ class Filesystem implements TranslationServiceInterface
     /**
      * @inheritDoc
      */
+    public function importAllTranslations()
+    {
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function synchronizeAllTranslations()
     {
     }

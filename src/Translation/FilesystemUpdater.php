@@ -137,4 +137,12 @@ class FilesystemUpdater
             }
         }
     }
+
+    /**
+     * @return string
+     */
+    public function getTargetDir()
+    {
+        return $this->targetDir;
+    }
 }

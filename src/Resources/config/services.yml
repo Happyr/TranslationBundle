@@ -16,13 +16,6 @@ services:
     class: Happyr\TranslationBundle\Service\Filesystem
     arguments: ['@happyr.translation.filesystem']
 
-  happyr.translation.service.loco:
-    class: Happyr\TranslationBundle\Service\Loco
-    arguments:
-      - '@happyr.translation.request_manager'
-      - '@happyr.translation.filesystem'
-      - ~
-
   happyr.translation.filesystem:
     class: Happyr\TranslationBundle\Translation\FilesystemUpdater
     arguments:
@@ -33,6 +26,14 @@ services:
     tags:
       - { name: kernel.event_listener, event: kernel.terminate, method: onTerminate, priority: -20 }
       - { name: kernel.event_listener, event: console.terminate, method: onTerminate, priority: -20 }
+
+  happyr.translation.service.loco:
+    class: Happyr\TranslationBundle\Service\Loco
+    arguments:
+      - '@happyr.translation.request_manager'
+      - '@happyr.translation.filesystem'
+      - '@translator'
+      - ~
 
   happyr.translation.request_manager:
     class: Happyr\TranslationBundle\Http\RequestManager
