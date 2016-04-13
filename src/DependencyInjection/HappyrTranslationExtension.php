@@ -77,6 +77,8 @@ class HappyrTranslationExtension extends Extension
     {
         if ($fileExtension === 'xlf') {
             $fileExtension = 'xliff';
+        } elseif ($fileExtension === 'yml') {
+            $fileExtension = 'yaml';
         }
 
         $loader = $container->register('happyr.translation.loader', sprintf('Symfony\Component\Translation\Loader\%sFileLoader', ucfirst($fileExtension)));

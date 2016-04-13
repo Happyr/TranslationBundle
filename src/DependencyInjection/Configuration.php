@@ -25,7 +25,7 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('httplug_message_factory')->defaultValue('httplug.message_factory')->cannotBeEmpty()->end()
             ->booleanNode('auto_add_assets')->defaultFalse()->end()
             ->booleanNode('allow_edit')->defaultTrue()->end()
-            ->enumNode('file_extension')->values(array('csv', 'ini', 'json', 'mo', 'php', 'po', 'qt', 'yaml', 'xlf'))->defaultValue('xlf')->end()
+            ->enumNode('file_extension')->values(array('csv', 'ini', 'json', 'mo', 'php', 'po', 'qt', 'yml', 'xlf'))->defaultValue('xlf')->end()
             ->arrayNode('locales')
                 ->requiresAtLeastOneElement()
                 ->prototype('scalar')->end()
