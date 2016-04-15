@@ -42,20 +42,27 @@ class FilesystemUpdater
     private $messages;
 
     /**
+     * @var bool
+     */
+    private $syncEmptyTranslations;
+
+    /**
      * Filesystem constructor.
      *
      * @param LoaderInterface $loader
      * @param DumperInterface $dumper
-     * @param                 $targetDir
-     * @param                 $fileExtension
+     * @param string          $targetDir
+     * @param string          $fileExtension
+     * @param bool            $syncEmptyTranslations
      */
-    public function __construct(LoaderInterface $loader, DumperInterface $dumper, $targetDir, $fileExtension)
+    public function __construct(LoaderInterface $loader, DumperInterface $dumper, $targetDir, $fileExtension, $syncEmptyTranslations = true)
     {
         $this->loader = $loader;
         $this->dumper = $dumper;
         $this->targetDir = $targetDir;
         $this->messages = array();
         $this->fileExtension = $fileExtension;
+        $this->syncEmptyTranslations = $syncEmptyTranslations;
     }
 
     /**
@@ -121,7 +128,11 @@ class FilesystemUpdater
 
             $translation = $m->getTranslation();
             if (empty($translation)) {
-                $translation = sprintf('[%s]', $m->getId());
+                if ($this->syncEmptyTranslations) {
+                    $translation = sprintf('[%s]', $m->getId());
+                } else {
+                    continue;
+                }
             }
 
             $catalogues[$key]->set($m->getId(), $translation, $m->getDomain());

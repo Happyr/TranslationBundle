@@ -23,6 +23,7 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('target_dir')->defaultValue('%kernel.root_dir%/Resources/translations')->end()
             ->scalarNode('httplug_client')->defaultValue('httplug.client')->cannotBeEmpty()->end()
             ->scalarNode('httplug_message_factory')->defaultValue('httplug.message_factory')->cannotBeEmpty()->end()
+            ->booleanNode('sync_empty_translations')->defaultTrue()->end()
             ->booleanNode('auto_add_assets')->defaultFalse()->end()
             ->booleanNode('allow_edit')->defaultTrue()->end()
             ->enumNode('file_extension')->values(array('csv', 'ini', 'json', 'mo', 'php', 'po', 'qt', 'yaml', 'xlf'))->defaultValue('xlf')->end()

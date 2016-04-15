@@ -33,7 +33,8 @@ class HappyrTranslationExtension extends Extension
         $targetDir = rtrim($config['target_dir'], '/');
         $container->findDefinition('happyr.translation.filesystem')
             ->replaceArgument(2, $targetDir)
-            ->replaceArgument(3, $config['file_extension']);
+            ->replaceArgument(3, $config['file_extension'])
+            ->replaceArgument(4, $config['sync_empty_translations']);
 
         $this->configureLoaderAndDumper($container, $config['file_extension']);
 
