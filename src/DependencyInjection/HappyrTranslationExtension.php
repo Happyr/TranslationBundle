@@ -76,8 +76,13 @@ class HappyrTranslationExtension extends Extension
      */
     protected function configureLoaderAndDumper(ContainerBuilder $container, $fileExtension)
     {
-        if ($fileExtension === 'xlf') {
-            $fileExtension = 'xliff';
+        switch ($fileExtension) {
+            case 'xlf':
+                $fileExtension = 'xliff';
+                break;
+            case 'yml':
+                $fileExtension = 'yaml';
+                break;
         }
 
         $loader = $container->register('happyr.translation.loader', sprintf('Symfony\Component\Translation\Loader\%sFileLoader', ucfirst($fileExtension)));
