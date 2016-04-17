@@ -48,7 +48,7 @@ class HappyrTranslationExtension extends Extension
         $container->setAlias('happyr.translation', 'happyr.translation.service.'.$config['translation_service']);
 
         $container->findDefinition('happyr.translation.service.loco')
-            ->replaceArgument(2, $config['projects']);
+            ->replaceArgument(3, $config['projects']);
     }
 
     /**

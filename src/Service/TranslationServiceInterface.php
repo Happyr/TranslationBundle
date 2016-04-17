@@ -49,6 +49,12 @@ interface TranslationServiceInterface
     public function downloadAllTranslations();
 
     /**
+     * Upload all the translations from the symfony project into. This will override
+     * every strings in loco
+     */
+    public function uploadAllTranslations();
+
+    /**
      * Synchronize all the translations with Loco. This will keep placeholders. This function is slower
      * than just to download the translations.
      */
