@@ -33,7 +33,8 @@ class HappyrTranslationExtension extends Extension
         $targetDir = rtrim($config['target_dir'], '/');
         $container->findDefinition('happyr.translation.filesystem')
             ->replaceArgument(2, $targetDir)
-            ->replaceArgument(3, $config['file_extension']);
+            ->replaceArgument(3, $config['file_extension'])
+            ->replaceArgument(4, $config['sync_empty_translations']);
 
         $this->configureLoaderAndDumper($container, $config['file_extension']);
 
@@ -75,8 +76,13 @@ class HappyrTranslationExtension extends Extension
      */
     protected function configureLoaderAndDumper(ContainerBuilder $container, $fileExtension)
     {
-        if ($fileExtension === 'xlf') {
-            $fileExtension = 'xliff';
+        switch ($fileExtension) {
+            case 'xlf':
+                $fileExtension = 'xliff';
+                break;
+            case 'yml':
+                $fileExtension = 'yaml';
+                break;
         }
 
         $loader = $container->register('happyr.translation.loader', sprintf('Symfony\Component\Translation\Loader\%sFileLoader', ucfirst($fileExtension)));
