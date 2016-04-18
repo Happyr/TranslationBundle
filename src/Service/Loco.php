@@ -8,8 +8,7 @@ use Happyr\TranslationBundle\Http\RequestManager;
 use Happyr\TranslationBundle\Model\Message;
 use Happyr\TranslationBundle\Translation\FilesystemUpdater;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
-use Symfony\Component\Translation\DataCollectorTranslator;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
@@ -34,17 +33,17 @@ class Loco implements TranslationServiceInterface
     private $filesystemService;
 
     /**
-     * @var DataCollectorTranslator filesystemService
+     * @var TranslatorInterface filesystemService
      */
     private $translator;
 
     /**
-     * @param DataCollectorTranslator $translator
+     * @param TranslatorInterface $translator
      * @param RequestManager $requestManager
      * @param FilesystemUpdater $fs
      * @param array $projects
      */
-    public function __construct(RequestManager $requestManager, FilesystemUpdater $fs, DataCollectorTranslator $translator, array $projects)
+    public function __construct(RequestManager $requestManager, FilesystemUpdater $fs, TranslatorInterface $translator, array $projects)
     {
         $this->translator = $translator;
         $this->requestManager = $requestManager;
