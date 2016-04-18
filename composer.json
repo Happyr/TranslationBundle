@@ -25,7 +25,8 @@
     },
     "suggest": {
         "php-http/httplug-bundle": "To easier configure your httplug clients.",
-        "happyr/auto-fallback-translation-bundle": "To automatically translate phrases that are missing form your secondary language."
+        "happyr/auto-fallback-translation-bundle": "To automatically translate phrases that are missing form your secondary language.",
+        "php-http/guzzle6-adapter": "To enable Guzzl6HttpFactory and use this Http Adapter directly over configuration"
     },
     "autoload": {
         "psr-4": {
