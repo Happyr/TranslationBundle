@@ -55,4 +55,10 @@ class Blackhole implements TranslationServiceInterface
     {
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function uploadAllTranslations()
+    {
+    }
 }
