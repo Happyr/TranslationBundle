@@ -74,4 +74,10 @@ class Filesystem implements TranslationServiceInterface
     {
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function uploadAllTranslations()
+    {
+    }
 }
