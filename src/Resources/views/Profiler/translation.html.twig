@@ -4,6 +4,8 @@
  # Authors Tobias Nyholm, Damien Alexandre (damienalexandre), Damien Harper
  #}
 
+{% import _self as translation_helper %}
+
 {% block panelContent %}
     <h2>Translation Metrics</h2>
 
@@ -60,7 +62,7 @@
                         <p>None of the used translation messages are defined for the given locale.</p>
                     </div>
                 {% else %}
-                    {{ _self.render_table(messages_defined) }}
+                    {{ translation_helper.render_table(messages_defined) }}
                 {% endif %}
             </div>
         </div>
@@ -79,7 +81,7 @@
                         <p>No fallback translation messages were used.</p>
                     </div>
                 {% else %}
-                    {{ _self.render_table(messages_fallback) }}
+                    {{ translation_helper.render_table(messages_fallback) }}
                 {% endif %}
             </div>
         </div>
@@ -99,7 +101,7 @@
                         <p>There are no messages of this category.</p>
                     </div>
                 {% else %}
-                    {{ _self.render_table(messages_missing) }}
+                    {{ translation_helper.render_table(messages_missing) }}
                 {% endif %}
             </div>
         </div>
