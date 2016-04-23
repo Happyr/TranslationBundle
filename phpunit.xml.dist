@@ -16,7 +16,7 @@
     <formatter type="clover" usefile="false"/>
     <testsuites>
         <testsuite name="Happyr Test Suite">
-            <directory>./Test</directory>
+            <directory>./tests</directory>
         </testsuite>
     </testsuites>
 
@@ -25,7 +25,7 @@
             <directory suffix=".php">./</directory>
             <exclude>
                 <directory>vendor</directory>
-                <directory>Test</directory>
+                <directory>tests</directory>
             </exclude>
         </whitelist>
     </filter>
