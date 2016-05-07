@@ -42,6 +42,20 @@ You do also need to choose what library to use when you are sending http message
 ```bash
 php composer.phar require php-http/guzzle6-adapter
 ```
+Enable the bundle in your kernel:
+
+```
+<?php
+// app/AppKernel.php
+
+public function registerBundles()
+{
+    $bundles = array(
+        // ...
+        new Happyr\TranslationBundle\HappyrTranslationBundle(),
+    );
+}
+```
 
 This bundle require you to register a service for the [HttpClient](https://github.com/php-http/httplug/blob/master/src/HttpClient.php)
 and the [MessageFactory](https://github.com/php-http/message-factory/blob/master/src/MessageFactory.php) and then set 
