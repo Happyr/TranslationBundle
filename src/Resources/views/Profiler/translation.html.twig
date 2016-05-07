@@ -146,11 +146,13 @@
                 <td>
                     {{ message.id }}
 
-                    {% if message.transChoiceNumber is not null %}
+                    {# message.transChoiceNumber is not defined before symfony 2.8.0 #}
+                    {% if message.transChoiceNumber is defined and message.transChoiceNumber is not null %}
                         <small class="newline">(pluralization is used)</small>
                     {% endif %}
 
-                    {% if message.parameters|length > 0 %}
+                    {# message.parameters is not defined before symfony 2.8.0 #}
+                    {% if message.parameters is defined and message.parameters|length > 0 %}
                         <button class="btn-link newline text-small sf-toggle" data-toggle-selector="#parameters-{{ loop.index }}" data-toggle-alt-content="Hide parameters">Show parameters</button>
 
                         <div id="parameters-{{ loop.index }}" class="hidden">
