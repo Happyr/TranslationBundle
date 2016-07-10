@@ -105,7 +105,7 @@ _happyr_translation:
 happyr_translation:
   httplug_client: 'httplug.client'
   httplug_message_factory: 'httplug.message_factory'	
-  file_extension: 'xlf' # could be  'json', 'mo', 'php', 'po', 'yaml' and many more
+  file_extension: 'xlf' # could be  'json', 'mo', 'php', 'po', 'yml' and many more
   locales: []
   domains: []
   translation_service: 'loco'
