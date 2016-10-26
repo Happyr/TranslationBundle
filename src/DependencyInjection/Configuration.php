@@ -62,9 +62,7 @@ class Configuration implements ConfigurationInterface
                     ->prototype('scalar')->end()
                 ->end()
                 ->arrayNode('tags')
-                    ->prototype('array')
-                        ->prototype('scalar')->end()
-                    ->end()
+                    ->prototype('scalar')->end()
                 ->end()
             ->end()
         ->end();
