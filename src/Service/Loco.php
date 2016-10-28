@@ -431,10 +431,10 @@ class Loco implements TranslationServiceInterface
             $data[$url] = $fileName;
 
             if (count($config['tags']) !== 0) {
-                $query = $this->getExportQueryParams($config['api_key'], $config['tags']);
+                $query_tags = $this->getExportQueryParams($config['api_key'], $config['tags']);
 
                 // Build url
-                $url = sprintf('%sexport/locale/%s.%s?%s', self::BASE_URL, $locale, $this->filesystemService->getFileExtension(), http_build_query($query));
+                $url = sprintf('%sexport/locale/%s.%s?%s', self::BASE_URL, $locale, $this->filesystemService->getFileExtension(), http_build_query($query_tags));
                 $fileName = sprintf('%s.%s.%s', $domain.'-'.(implode($config['tags'], '-')), $locale, $this->filesystemService->getFileExtension());
 
                 $data[$url] = $fileName;
