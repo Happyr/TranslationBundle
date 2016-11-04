@@ -1,5 +1,11 @@
 # Happyr Translation Bundle
 
+[![Latest Version](https://img.shields.io/github/release/Happyr/TranslationBundle.svg?style=flat-square)](https://github.com/Happyr/TranslationBundle/releases)
+[![Build Status](https://img.shields.io/travis/Happyr/TranslationBundle.svg?style=flat-square)](https://travis-ci.org/Happyr/TranslationBundle)
+[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/Happyr/TranslationBundle.svg?style=flat-square)](https://scrutinizer-ci.com/g/Happyr/TranslationBundle)
+[![Quality Score](https://img.shields.io/scrutinizer/g/Happyr/TranslationBundle.svg?style=flat-square)](https://scrutinizer-ci.com/g/Happyr/TranslationBundle)
+[![Total Downloads](https://img.shields.io/packagist/dt/happyr/translation-bundle.svg?style=flat-square)](https://packagist.org/packages/happyr/translation-bundle)
+
 This bundle helps you to integrate with a third party translation service. The bundle has been focused to integrate to 
 the [Loco](https://localise.biz) service. If you want to know how Happyr work with this bundle you should check out 
 [this blog post](http://developer.happyr.com/how-happyr-work-with-symfony-translations).
