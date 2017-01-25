@@ -430,7 +430,7 @@ class Loco implements TranslationServiceInterface
 
             $data[$url] = $fileName;
 
-            if (count($config['tags']) !== 0) {
+            if (!empty($config['tags'])) {
                 $query_tags = $this->getExportQueryParams($config['api_key'], $config['tags']);
 
                 // Build url
