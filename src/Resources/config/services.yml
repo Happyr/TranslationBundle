@@ -40,3 +40,11 @@ services:
     class: Happyr\TranslationBundle\Http\RequestManager
     arguments: [~, ~]
     public: false
+
+  happyr.translation.http.guzzle6.client:
+    class: Http\Adapter\Guzzle6\Client
+    factory: [Happyr\TranslationBundle\Http\Factory\Guzzle6HttpFactory, createClient]
+
+  happyr.translation.http.guzzle6.message_factory:
+    class: Http\Adapter\Guzzle6\Client
+    factory: [Happyr\TranslationBundle\Http\Factory\Guzzle6HttpFactory, createMessageFactory]
