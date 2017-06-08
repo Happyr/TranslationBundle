@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\DataCollectorTranslator;
+use Symfony\Component\VarDumper\Cloner\Data;
 
 /**
  * @author Tobias Nyholm
@@ -138,6 +139,11 @@ class ProfilerController extends Controller
         }
 
         $messages = $this->getSelectedMessages($request, $token);
+
+        if ($messages instanceof Data) {
+            $messages = $messages->getValue(true);
+        }
+
         if (empty($messages)) {
             return new Response('No translations selected.');
         }
@@ -204,7 +210,13 @@ class ProfilerController extends Controller
 
         $profile = $profiler->loadProfile($token);
         $dataCollector = $profile->getCollector('translation');
-        $toSave = array_intersect_key($dataCollector->getMessages(), array_flip($selected));
+        $messages = $dataCollector->getMessages();
+
+        if ($messages instanceof Data) {
+            $messages = $messages->getValue(true);
+        }
+
+        $toSave = array_intersect_key($messages, array_flip($selected));
 
         $messages = array();
         foreach ($toSave as $data) {
