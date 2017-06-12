@@ -73,7 +73,7 @@ class Message
      * @param array $data
      *                    array( count = 1, domain = "navigation", id = "logout", locale = "sv", state = 1, translation = "logout" )
      */
-    public function __construct(array $data)
+    public function __construct($data)
     {
         $this->domain = $data['domain'];
         $this->id = $data['id'];
