@@ -118,6 +118,7 @@ happyr_translation:
   target_dir: '%kernel.root_dir%/Resources/translations'
   auto_add_assets: false
   allow_edit: true
+  sync_empty_translations: true
 ```
 
 # TODO
