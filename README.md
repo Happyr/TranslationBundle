@@ -22,7 +22,7 @@ The key features of this bundle is:
 
 To download all translations from Loco, simply run:
 ``` bash
-php app/console happyr:translation:download
+php bin/console happyr:translation:download
 ```
 
 When you have added new translations you may submit these to your translation SaaS by the WebProfiler toolbar.
@@ -37,7 +37,7 @@ When you want to fetch new translations from your SaaS you should run the synchr
 keep your current placeholders from missing translations. 
 
 ``` bash
-php app/console happyr:translation:sync
+php bin/console happyr:translation:sync
 ```
 
 ## Install
@@ -45,13 +45,12 @@ php app/console happyr:translation:sync
 Install the bundle with `composer require happyr/translation-bundle`
 
 You do also need to choose what library to use when you are sending http messages. Consult the [php-http/client-implementation](https://packagist.org/providers/php-http/client-implementation) virtual package to find adapters to use. For more information about virtual packages please refer to [Httplug](http://docs.httplug.io/en/latest/virtual-package/). Example:
-```bash
+``` bash
 php composer.phar require php-http/guzzle6-adapter
 ```
 Enable the bundle in your kernel:
 
-```
-<?php
+``` php
 // app/AppKernel.php
 
 public function registerBundles()
@@ -77,7 +76,7 @@ happyr_translation:
 
 If you have one Loco project per domain you may configure the bundle like this: 
 ``` yaml
-# /app/config/config.yml
+# app/config/config.yml
 happyr_translation:
   locales: ['en','sv','fr','es']
   projects:
@@ -89,8 +88,7 @@ happyr_translation:
 
 If you just doing one project and have tags for all your translation domains you may use this configuration:
 ``` yaml
-
-# /app/config/config.yml
+# app/config/config.yml
 happyr_translation:
   locales: ['en','sv','fr','es']
   domains: ['messages', 'navigation']
@@ -101,7 +99,7 @@ happyr_translation:
 
 You do also need to configure a development route. 
 ``` yaml
-# /app/config/routing_dev.yml
+# app/config/routing_dev.yml
 _happyr_translation:
   resource: '@HappyrTranslationBundle/Resources/config/routing_dev.yml'  
 ```
