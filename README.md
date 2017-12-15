@@ -45,13 +45,12 @@ php bin/console happyr:translation:sync
 Install the bundle with `composer require happyr/translation-bundle`
 
 You do also need to choose what library to use when you are sending http messages. Consult the [php-http/client-implementation](https://packagist.org/providers/php-http/client-implementation) virtual package to find adapters to use. For more information about virtual packages please refer to [Httplug](http://docs.httplug.io/en/latest/virtual-package/). Example:
-```bash
+``` bash
 php composer.phar require php-http/guzzle6-adapter
 ```
 Enable the bundle in your kernel:
 
-```
-<?php
+``` php
 // app/AppKernel.php
 
 public function registerBundles()
@@ -89,7 +88,6 @@ happyr_translation:
 
 If you just doing one project and have tags for all your translation domains you may use this configuration:
 ``` yaml
-
 # app/config/config.yml
 happyr_translation:
   locales: ['en','sv','fr','es']
