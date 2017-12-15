@@ -46,7 +46,7 @@ Install the bundle with `composer require happyr/translation-bundle`
 
 You do also need to choose what library to use when you are sending http messages. Consult the [php-http/client-implementation](https://packagist.org/providers/php-http/client-implementation) virtual package to find adapters to use. For more information about virtual packages please refer to [Httplug](http://docs.httplug.io/en/latest/virtual-package/). Example:
 ```bash
-php composer.phar require php-http/guzzle6-adapter
+composer require php-http/guzzle6-adapter
 ```
 Enable the bundle in your kernel:
 
