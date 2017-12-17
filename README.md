@@ -6,6 +6,13 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/Happyr/TranslationBundle.svg?style=flat-square)](https://scrutinizer-ci.com/g/Happyr/TranslationBundle)
 [![Total Downloads](https://img.shields.io/packagist/dt/happyr/translation-bundle.svg?style=flat-square)](https://packagist.org/packages/happyr/translation-bundle)
 
+
+# DEPRECATED WARNING: Use php-translation/symfony-bundle
+
+This bundle has been deprecated in favor of [php-tranlation/symfony-bundle](https://packagist.org/packages/php-translation/symfony-bundle). We took all features form this bundle and put them (and many more) at php-translation. 
+
+-------
+
 This bundle helps you to integrate with a third party translation service. The bundle has been focused to integrate to 
 the [Loco](https://localise.biz) service. If you want to know how Happyr work with this bundle you should check out 
 [this blog post](http://developer.happyr.com/how-happyr-work-with-symfony-translations).
