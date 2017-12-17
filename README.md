@@ -7,9 +7,11 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/happyr/translation-bundle.svg?style=flat-square)](https://packagist.org/packages/happyr/translation-bundle)
 
 
-# DEPRECATED WARNING: Use php-translation/symfony-bundle
+# DEPRECATED: Use php-translation/symfony-bundle
 
 This bundle has been deprecated in favor of [php-tranlation/symfony-bundle](https://packagist.org/packages/php-translation/symfony-bundle). We took all features form this bundle and put them (and many more) at php-translation. 
+
+The bundle will still live here forever but no new features or bugfixes will be merged. Forking or moving this repo to new maintainers will not make any sense since that is pretty much what we already done in php-translation. 
 
 -------
 
