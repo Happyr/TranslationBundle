@@ -179,6 +179,11 @@ class ProfilerController extends Controller
 
         $profile = $profiler->loadProfile($token);
         $messages = $profile->getCollector('translation')->getMessages();
+        
+        if ($messages instanceof Data) {
+            $messages = $messages->getValue(true);
+        }
+        
         if (!isset($messages[$messageId])) {
             throw $this->createNotFoundException(sprintf('No message with key "%s" was found.', $messageId));
         }
