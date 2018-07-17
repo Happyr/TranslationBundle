@@ -357,7 +357,7 @@ class Loco implements TranslationServiceInterface
 
         foreach ($config['locales'] as $locale) {
             $resource = sprintf('export/locale/%s.%s', $locale, 'json');
-            $response = $this->makeApiRequest($config['api_key'], 'GET', $resource, ['query' => $query]);
+            $response = $this->makeApiRequest($config['api_key'], 'GET', $resource, null, null, $query);
 
             $this->flatten($response);
 
