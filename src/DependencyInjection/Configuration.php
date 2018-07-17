@@ -61,6 +61,9 @@ class Configuration implements ConfigurationInterface
                     ->requiresAtLeastOneElement()
                     ->prototype('scalar')->end()
                 ->end()
+                ->arrayNode('tags')
+                    ->prototype('scalar')->end()
+                ->end()
             ->end()
         ->end();
 

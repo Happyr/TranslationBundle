@@ -429,6 +429,16 @@ class Loco implements TranslationServiceInterface
             $fileName = sprintf('%s.%s.%s', $domain, $locale, $this->filesystemService->getFileExtension());
 
             $data[$url] = $fileName;
+
+            if (!empty($config['tags'])) {
+                $query_tags = $this->getExportQueryParams($config['api_key'], $config['tags']);
+
+                // Build url
+                $url = sprintf('%sexport/locale/%s.%s?%s', self::BASE_URL, $locale, $this->filesystemService->getFileExtension(), http_build_query($query_tags));
+                $fileName = sprintf('%s.%s.%s', $domain.'-'.(implode($config['tags'], '-')), $locale, $this->filesystemService->getFileExtension());
+
+                $data[$url] = $fileName;
+            }
         }
     }
 
@@ -437,13 +447,18 @@ class Loco implements TranslationServiceInterface
      *
      * @return array
      */
-    private function getExportQueryParams($key)
+    private function getExportQueryParams($key, $tags=null)
     {
         $data = array(
             'index' => 'id',
             'status' => 'translated',
             'key' => $key,
         );
+
+        if ($tags !== null) {
+            $data['filter'] = implode($tags, ',');
+        }
+
         switch ($this->filesystemService->getFileExtension()) {
             case 'php':
                 $data['format'] = 'zend'; // 'Zend' will give us a flat array
